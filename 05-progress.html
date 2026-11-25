@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 · Handover progress</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon handover · page 5 of 5</p>
+  <h1>Handover progress</h1>
+  <p class="lede">What is done, what is not, and the evidence for each claim. Updated as items close; a line here without evidence is a line that has not been earned.</p>
+  <p class="meta">Status as of 25 November 2026 · next review 4 December 2026</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html" aria-current="page">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<h2 id="p0">P0 · How to read this page, and what to do first</h2>
+
+<p>Page 5 is the honest ledger. Each row says what is done, what is only written, and what is waiting on someone else. Read the state column and the evidence column together: a green DONE with thin evidence is a warning, not a celebration.</p>
+
+<p>If you have ten minutes and no context, do these three things in this order.</p>
+
+<ol class="steps">
+  <li><strong>Fix the theme test suite.</strong> It is the smallest change with the largest effect: four lines of <code>package.json</code> restore the publish gate. Page 3, A3.</li>
+  <li><strong>Change the campaign rules editor email.</strong> Until then, nobody but the outgoing engineer can edit campaign rules. Page 2, B2.</li>
+  <li><strong>Rotate the Admin API token.</strong> It expires on schedule, and the rotation is also the moment the successor takes ownership of it. Page 2, B5.</li>
+</ol>
+
+<h2 id="p1">P1 · Status by responsibility</h2>
+
+<p>Three states: <span class="tag verified">done</span> means the artefact exists and was checked, <span class="tag unverified">in progress</span> means written but not exercised end to end, <span class="tag blocked">outstanding</span> means someone else has to act first.</p>
+
+<table>
+  <thead>
+    <tr><th>Responsibility</th><th>State</th><th>Evidence</th><th>Owner of what remains</th><th>Proposed date</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Website maintenance walkthroughs, written in place of video</td>
+      <td><span class="tag verified">done</span></td>
+      <td><a href="01-shopify-maintenance.html">Page 1</a>: nine procedures, eleven screenshots captured from the live admin on 25 Nov 2026. The theme publish, homepage, product, collection and cart-ladder paths were opened and read; the admin labels in the steps come from those screens.</td>
+      <td>Lisa and Leo: run W1 to W8 once each and mark corrections</td>
+      <td>27 Nov</td>
+    </tr>
+    <tr>
+      <td>Checkout verification procedure</td>
+      <td><span class="tag unverified">in progress</span></td>
+      <td><a href="01-shopify-maintenance.html#w8">W8</a> is written from the systems involved. No test order was placed, so the sequence is unproven end to end.</td>
+      <td>Logan, with a test cart</td>
+      <td>by 4 Dec</td>
+    </tr>
+    <tr>
+      <td>Bundle pricing procedure</td>
+      <td><span class="tag unverified">in progress</span></td>
+      <td><a href="01-shopify-maintenance.html#w5">W5</a> and <a href="02-backer-program-operations.html#b4">B4</a> describe the live editor, with the loaded document read as 15 groups and 268 assignments. No group was edited, so the save-and-quote loop is untested.</td>
+      <td>Lisa or Leo, in a scratch group removed afterwards</td>
+      <td>2 Dec, session B</td>
+    </tr>
+    <tr>
+      <td>Backer Program operational handover</td>
+      <td><span class="tag unverified">in progress</span></td>
+      <td><a href="02-backer-program-operations.html">Page 2</a>: dashboard, Discount Rules, Import Backer and the claim state machine documented, with live figures from 25 Nov 2026 (2,385 backers; 205 awaiting claim; four campaigns holding claims). The import was not run, even in dry run.</td>
+      <td>Logan, dry run on a real report</td>
+      <td>4 Dec, session C</td>
+    </tr>
+    <tr>
+      <td>Technical documentation and access transfer</td>
+      <td><span class="tag blocked">outstanding</span></td>
+      <td><a href="03-access-and-code.html">Page 3</a> documents all seven systems, both repositories, both deploy paths and the revocation order. No credential has moved yet: the tokens, Vercel membership and staff accounts are all still with the outgoing engineer.</td>
+      <td>Carson for account decisions, Logan for execution</td>
+      <td>by 16 Dec, per the checklist</td>
+    </tr>
+    <tr>
+      <td>Knowledge transfer sessions</td>
+      <td><span class="tag blocked">outstanding</span></td>
+      <td><a href="04-knowledge-transfer.html">Page 4</a> has five agendas with pre-work and artefacts. No session has been held, and the split of responsibilities between Lisa and Leo is not decided.</td>
+      <td>Logan to convene; Carson to confirm the split</td>
+      <td>27 Nov to 11 Dec</td>
+    </tr>
+    <tr>
+      <td>Source code transfer</td>
+      <td><span class="tag verified">done</span></td>
+      <td>Both repositories cloned here and inspected at <code>e2380c9</code> (theme) and <code>76a1165</code> (app); 60 theme sections, 288 passing app tests, module reference in <code>construct.md</code>. Repository ownership is org-held since 18 Nov 2026. Access grants to Lisa and Leo are still open.</td>
+      <td>Logan</td>
+      <td>27 Nov</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="p2">P2 · Defects found while writing this</h2>
+
+<p>Each of these is a real defect in the systems or the existing handover plan, found by checking rather than assuming. They are listed with the impact so the successor can decide what to fix first.</p>
+
+<table>
+  <thead><tr><th>Defect</th><th>Evidence</th><th>Impact</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>The theme test suite cannot run</td>
+      <td><code>seadon.production</code> has no <code>package.json</code>; <code>node --test tests/*.test.js</code> fails with <code>Cannot find module 'jsdom'</code>; four of six files need <code>jsdom</code> or <code>liquidjs</code></td>
+      <td>The theme publish gate in W1 has nothing behind it, so a publish relies on manual preview alone</td>
+      <td>Add the four-line <code>package.json</code> on <a href="03-access-and-code.html#a3">page 3, A3</a> and install</td>
+    </tr>
+    <tr>
+      <td>Test count in the plan is stale</td>
+      <td>The plan says 283 app tests; the suite reports 288 passing on 25 Nov 2026</td>
+      <td>Nobody notices until a deploy is gated on the wrong number</td>
+      <td>Quote the command, not the count</td>
+    </tr>
+    <tr>
+      <td>Theme deploy instruction in the plan is wrong</td>
+      <td>Runbook R2 says <code>npm test</code> in <code>seadon.production</code>; no <code>package.json</code> exists there</td>
+      <td>A successor following R2 concludes the tests are broken, or skips them</td>
+      <td>Corrected in W1 and A3 of this set</td>
+    </tr>
+    <tr>
+      <td>Admin API token expires on schedule</td>
+      <td>Plan, section 1: the app holds a short-lived token; the permanent one is minted from the app dashboard</td>
+      <td>Every Shopify call from the app fails at expiry, including claims and quotes</td>
+      <td>Mint the permanent token; rotate again at handover</td>
+    </tr>
+    <tr>
+      <td>Shopify bulk operations blocked from ASN 12322</td>
+      <td>Plan, section 1: ticket <code>a Shopify support ticket</code>; the app ships <code>/api/egress-probe</code> to measure the Vercel egress range</td>
+      <td>Bulk jobs fail while ordinary calls work, which looks like a code bug</td>
+      <td>Fill the allowlist with ASN 16509 plus the office range, test, then enforce</td>
+    </tr>
+    <tr>
+      <td>Theme clone points at the pre-transfer remote</td>
+      <td><code>git remote -v</code> in <code>seadon.production</code> shows <code>logansolaman/seadon.production</code>; the app shows <code>seadon-logan</code></td>
+      <td>First push from a new machine may go to a redirect or fail</td>
+      <td><code>git remote set-url origin</code> to the org URL</td>
+    </tr>
+    <tr>
+      <td><code>assets/seadon-inventory-guard.js</code> broken past phase 1</td>
+      <td>Plan, section 3: it calls functions removed by revert <code>976a4ae</code>, so the feed path falls into the catch-all fallback</td>
+      <td>Inventory guard silently does nothing; stock can oversell</td>
+      <td>Repair or delete the file; it is listed with the orphaned assets</td>
+    </tr>
+    <tr>
+      <td>Orphaned theme assets</td>
+      <td>Plan, section 3: <code>bundle-quote-client.js</code>, <code>seadon-backer-new.js</code>, <code>seadon-three-scene.js</code> have no loader; <code>seadon-backer.js</code> is referenced only by a <code>.backup</code> section</td>
+      <td>Dead weight, and a trap for the next person reading the theme</td>
+      <td>Delete after one search for references</td>
+    </tr>
+    <tr>
+      <td>Structured data partially reverted</td>
+      <td>Plan, section 3: <code>3fcab80</code> was reverted by <code>b079c32</code>; product pages use Shopify's stock <code>structured_data</code> filter</td>
+      <td>Product rich results are weaker than intended; not a breakage</td>
+      <td>Re-land after the handover, with a test</td>
+    </tr>
+  <tr>
+      <td>Gift slot settings are stored but never read</td>
+      <td><code>gift_rung1_slots</code> and <code>gift_rung2_slots</code> appear only in the schema and settings data; <code>assets/cart-gift.js</code> hardcodes one pick at rung 1 and two at rung 2 in add mode</td>
+      <td>An operator changes the slot count and nothing happens on the storefront</td>
+      <td>Either read the setting or remove it from the panel; until then, document that mode controls the count</td>
+    </tr>
+    <tr>
+      <td>Claim state can drift from the order</td>
+      <td><code>lib/handlers/claim.js</code> writes <code>checkout_ready</code> inside a swallowed try/catch after the invoice exists; expiry is computed but never enforced, and no job sweeps expired claims</td>
+      <td>A backer pays an invoice whose claim is still unclaimed, and <code>orders/paid</code> refuses it with "Order reservation does not match claim"</td>
+      <td>Treat claim writes as part of checkout, and reconcile the two records when the error appears</td>
+    </tr>
+    
+    
+    <tr>
+      <td>Campaign rules editor is gated to one email address</td>
+      <td><code>sections/main-campaign-rules-editor.liquid</code> admits only <code>logan@seadon.co</code> plus design mode; the portal and claim page read a GitHub raw URL pinned to commit <code>1e1046e</code>, while the editor saves to the app</td>
+      <td>After handover nobody can open the editor, and a save does not change what the pages load</td>
+      <td>Change the email constant and re-point both reads before 16 December</td>
+    </tr>
+    <tr>
+      <td>Dashboard campaign titles come from a deprecated metafield</td>
+      <td><code>lib/handlers/dashboard.js</code> reads <code>kickstarter.campaign_rules</code> for titles, which the importer now marks deprecated</td>
+      <td>Campaign names can show blank or "orphan" next to correct counts</td>
+      <td>Read titles from the rules JSON the importer already fetches</td>
+    </tr>
+    <tr>
+      <td>Theme push script documents a filename that no longer exists</td>
+      <td><code>scripts/push-theme-file.mjs</code> usage text names <code>gift-push-theme.mjs</code>; the store and API version are hardcoded</td>
+      <td>Minor: a successor copies a command that fails</td>
+      <td>Fix the usage text, or delete the script if the editor flow is enough</td>
+    </tr>
+  <tr>
+      <td>Two security findings withheld from this copy</td>
+      <td>An internal review found two issues in the app's credential and inventory endpoints. The technical detail identifies live attack surfaces.</td>
+      <td>Held in the internal edition and given to the successor directly</td>
+      <td>Both are recorded on the internal status board with their fixes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="p3">P3 · Decisions needed from Carson</h2>
+
+<p>These are commercial or ownership decisions, not engineering ones. Each blocks something concrete.</p>
+
+<ol>
+  <li><strong>Vercel plan.</strong> A second team member requires the Pro plan. Without it, the account has to be transferred wholesale, which changes who can deploy.</li>
+  <li><strong>Deploy identity.</strong> The app pipeline requires commits authored <code>logan@seadon.co</code>. Either keep that identity, or change the pipeline to accept the successor's address before 16 December.</li>
+  <li><strong>Ownership split.</strong> Which of Lisa and Leo owns storefront content, which owns the Backer Program, and who signs for access. Page 4 cannot schedule sensibly until this is answered.</li>
+  <li><strong>Theme test suite fix.</strong> Adding a <code>package.json</code> and two dev dependencies to the theme repository is a small change with a real effect: it restores the publish gate.</li>
+  <li><strong>Permanent token timing.</strong> The token expires on schedule. Minting it this week removes a live failure from the critical path.</li>
+  <li><strong>Campaign rules ownership.</strong> The rules editor admits one email address, and the storefront reads a pinned GitHub commit. Someone must own that file after handover, and the email gate needs changing first.</li>
+  <li><strong>Inventory endpoint exposure.</strong> The inventory feed answers without proxy authorisation. Decide whether that stays open or is closed before enforcement.</li>
+</ol>
+
+<h2 id="p4">P4 · What is verified, and what is not</h2>
+
+<p>This machine confirmed the app test suite (288 passing) and both repository heads and remotes. The screens and figures in pages 1 and 2 come from the live admin on 25 November 2026. They cover labels, dashboard counts, the Discount Rules document size, the import controls, the cart ladder, and the editor's section list. Code checked directly: the free gift keys and their defaults, the gift theme allowlist, and the admin tabs with the files behind them.</p>
+
+<p>Not verified: an actual price quote, an actual CSV import, a claim moving through its states, a checkout, a deploy, a token rotation, and the IP allowlist. Those are the items marked in progress above, and each one has a date and an owner in the tables.</p>
+
+<h2 id="p5">P5 · Sign-off</h2>
+
+<table>
+  <thead><tr><th>Role</th><th>Name</th><th>Confirms</th><th>Date</th></tr></thead>
+  <tbody>
+    <tr><td>Outgoing engineer</td><td>Logan Solaman</td><td>Documentation delivered; access transfer executed</td><td></td></tr>
+    <tr><td>Successor, storefront</td><td>Lisa</td><td>Can run page 1 without help</td><td></td></tr>
+    <tr><td>Successor, Backer Program</td><td>Leo</td><td>Can run page 2 without help</td><td></td></tr>
+    <tr><td>Company owner</td><td>Carson</td><td>Access revoked after successful transfer</td><td></td></tr>
+  </tbody>
+</table>
+
+</main>
+
+<footer>
+  <div>
+    <p>Page 5 of 5 · compiled 25 November 2026 · review on 4 December 2026 and at sign-off on 16 December 2026.</p>
+    <p>Back to <a href="index.html">the overview</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

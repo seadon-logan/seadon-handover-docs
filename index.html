@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seadon handover: web and digital infrastructure</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon · handover documentation</p>
+  <h1>Web and digital infrastructure handover</h1>
+  <p class="lede">Written operating documentation for the Shopify storefront, the Seadon Backer Program app and the infrastructure behind them. Every procedure here replaces the screen-recorded tutorial it would otherwise have been, and carries a screenshot of the screen it describes.</p>
+  <p class="meta">Prepared for Lisa and Leo · Compiled 25 November 2026 · Final working day for the outgoing engineer: 16 December 2026</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html" aria-current="page">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<h2 id="what">What this document set is</h2>
+
+<p>Six pages: one orientation page and five by responsibility. They are written to be used at a desk with the Shopify admin open, not read once and filed.</p>
+
+<ul>
+  <li><a href="00-start-here.html">Start here</a> is the absolute basics: logging in, the admin map, and a glossary of every term.</li>
+  <li>Page 1 is the day-to-day maintenance manual.</li>
+  <li>Page 2 is the Backer Program operations manual.</li>
+  <li>Page 3 lists what access must move and how the code deploys.</li>
+  <li>Page 4 is the plan for the live sessions with Lisa and Leo.</li>
+  <li>Page 5 is the status board.</li>
+</ul>
+
+<p>The original handover plan (<code>Seadon-Engineering-Handover.txt</code>, kept alongside this file) remains the reference for function-level detail: the module-by-module reference for both repositories lives in its appendices B1 to B4. This set does not repeat those pages. It tells an operator what to do, in what order, with what to check.</p>
+
+<div class="callout">
+  <h4>What replaced the video</h4>
+  <p>The plan called for screen-recorded walkthroughs. These pages are the written equivalent: numbered steps with the exact admin path, the button label, a screenshot of the screen, a verification step that proves the change landed, and a rollback line. A screenshot cannot show a hover state or a drag, so steps that need one call it out in words.</p>
+</div>
+
+<h2 id="map">Document map</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4><a href="00-start-here.html">Start here: the absolute basics</a></h4>
+    <p>What the website is, how to log in, a numbered map of the admin, the three rules that prevent the worst mistakes, and a glossary of every term in plain words.</p>
+  </div>
+  <div class="card">
+    <h4><a href="01-shopify-maintenance.html">1 · Shopify website maintenance</a></h4>
+    <p>Homepage and product page edits, collections, bundle pricing, discount codes, the free gift ladder, checkout verification, and what to do when something breaks.</p>
+  </div>
+  <div class="card">
+    <h4><a href="02-backer-program-operations.html">2 · Backer Program operations</a></h4>
+    <p>Backer management, campaign setup, the claim lifecycle, pricing configuration in the Discount Rules editor, the CSV import, and ongoing maintenance.</p>
+  </div>
+  <div class="card">
+    <h4><a href="03-access-and-code.html">3 · Access, source code, deployment</a></h4>
+    <p>Which system lives where, who holds it today, what must be transferred, the deploy procedure for each repository, and the revocation checklist for 16 December.</p>
+  </div>
+  <div class="card">
+    <h4><a href="04-knowledge-transfer.html">4 · Knowledge transfer with Lisa and Leo</a></h4>
+    <p>Five sessions with agendas, pre-work, the artefact each session must produce, and a sign-off line so completion is not a matter of memory.</p>
+  </div>
+  <div class="card">
+    <h4><a href="05-progress.html">5 · Handover progress</a></h4>
+    <p>Completed, in progress, and outstanding, with the evidence for each claim, the owner, and a proposed date where a date is still a proposal.</p>
+  </div>
+</div>
+
+<h2 id="systems">The systems at a glance</h2>
+
+<table>
+  <thead>
+    <tr><th>System</th><th>What it does</th><th>Where it runs</th><th>Source of truth</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Storefront theme</td>
+      <td>Shopify OS 2.0 theme for <code>seadon.co</code>: homepage sections, product templates, cart, bundle builder, cart gift picking, backer portal pages</td>
+      <td>Shopify, store <code>seadonlimited.myshopify.com</code></td>
+      <td><code>seadon.production</code> repository, <code>main</code> at <code>e2380c9</code> (16 Nov 2026)</td>
+    </tr>
+    <tr>
+      <td>Seadon Backer Program</td>
+      <td>Embedded Shopify app: backer dashboard, claim routes, bundle quotes and checkout, gift settings, Discount Rules pricing, CSV import, webhooks, cron sync</td>
+      <td>Vercel project <code>seadon-backer-program</code>, Upstash Redis</td>
+      <td><code>seadon-backer-program</code> repository, <code>main</code> at <code>76a1165</code> (23 Nov 2026)</td>
+    </tr>
+    <tr>
+      <td>Metafields</td>
+      <td>The data contract between theme, app and Shopify: claims ledger, campaign rules, bundle pricing, colourway links</td>
+      <td>Shopify metafields on shop, product and customer</td>
+      <td>Written by the app; read by the theme</td>
+    </tr>
+    <tr>
+      <td>Analytics</td>
+      <td>GA4 property <code>G-DHY56CZY6V</code>, Tag Manager container <code>TVQT7M6R</code>, Microsoft Clarity through GTM, Search Console</td>
+      <td>Company Google account</td>
+      <td>Exports only; no API access was granted</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="reading">How to read the status tags</h2>
+
+<p>Each procedure carries one of three tags, because a procedure written from code and a procedure actually run on the live store are not the same evidence.</p>
+
+<ul>
+  <li><span class="tag verified">verified</span> Executed end to end on 25 November 2026 and confirmed by reading the result back, usually in a screenshot.</li>
+  <li><span class="tag unverified">described</span> Written from the repository, the handover plan or the admin UI, but the step was not carried out. Treat the first run as a test and expect a small correction.</li>
+  <li><span class="tag blocked">blocked</span> Cannot be completed without a decision or an access change from someone else. The blocker is named.</li>
+</ul>
+
+<p>Claims about numbers or behaviour follow the same discipline inside the text: a figure is either measured here, traced to a named file and line, or labelled as a proposal.</p>
+
+<h2 id="rules">Operating rules that apply everywhere</h2>
+
+<ol class="steps">
+  <li><strong>Never edit the live theme in place.</strong> Duplicate it, change the duplicate, preview, run the test suite, publish, keep the old one unpublished as rollback. Page 1, section W1.</li>
+  <li><strong>A theme publish is all or nothing.</strong> Publishing files whose referenced snippets are still in progress breaks the live storefront for everyone.</li>
+  <li><strong>App tests green before a Vercel deploy, theme tests green before a theme publish.</strong> Commands and current state are on page 3.</li>
+  <li><strong>Commits for the app must be authored as <code>Logan Solaman &lt;logan@seadon.co&gt;</code></strong> or the Vercel deploy is blocked. This is an identity rule in the deploy pipeline, not a preference.</li>
+  <li><strong>Import with the dry run first.</strong> The backer CSV importer writes customer claims and tags; the dry run reports what it would do without writing.</li>
+  <li><strong>No credentials in documents, repositories or chat.</strong> Page 3 says where each credential lives and what to do with it, never the value.</li>
+</ol>
+
+<h2 id="gaps">Known gaps in the handover</h2>
+
+<p>These are open at the time of writing and are tracked with owners on page 5.</p>
+
+<ul>
+  <li>The theme test suite cannot run as documented: the repository has no <code>package.json</code> and the tests import <code>jsdom</code> and <code>liquidjs</code>, which are not installed. Page 3 gives the one-line fix.</li>
+  <li>The Backer Program holds a short-lived Admin API token that expires on schedule; the permanent-token swap has not been done.</li>
+  <li>Shopify blocked bulk operations from ASN 12322 until the IP allowlist is filled with the Vercel egress range.</li>
+  <li><code>assets/seadon-inventory-guard.js</code> is broken past phase 1: it calls functions removed by revert <code>976a4ae</code>.</li>
+  <li>Someone must be named as the owner of each outstanding item. Where a name is missing, page 5 says so rather than guessing.</li>
+  <li>The campaign rules editor on the storefront admits one email address, and the pages read a GitHub commit pinned by URL, so the rules file has no obvious owner after handover.</li>
+</ul>
+
+</main>
+
+<footer>
+  <div>
+    <p>Seadon handover documentation · compiled 25 November 2026 · screenshots captured from the live Shopify admin and storefront on the same day.</p>
+    <p>Source material: <code>Seadon-Engineering-Handover.txt</code>, <code>seadon.production</code> at <code>e2380c9</code>, <code>seadon-backer-program</code> at <code>76a1165</code>.</p>
+  </div>
+</footer>
+</body>
+</html>

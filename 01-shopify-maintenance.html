@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1 · Shopify website maintenance</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon handover · page 1 of 5</p>
+  <h1>Shopify website maintenance</h1>
+  <p class="lede">Every routine change to the storefront, written as a click-by-click procedure: what to press, what you should see, how to check it worked, and how to undo it. No prior Shopify knowledge assumed.</p>
+  <p class="meta">All screenshots captured 25 November 2026 from <code>admin.shopify.com/store/seadonlimited</code> · read <a href="00-start-here.html">Start here</a> first if the words are new</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html" aria-current="page">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<div class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#how">How to use this page</a></li>
+    <li><a href="#w0">W0 · Finding your way around the admin</a></li>
+    <li><a href="#w1">W1 · Publish a theme change safely</a></li>
+    <li><a href="#w2">W2 · Homepage changes</a></li>
+    <li><a href="#w3">W3 · Product page changes</a></li>
+    <li><a href="#w4">W4 · Collections</a></li>
+    <li><a href="#w5">W5 · Bundle pricing</a></li>
+    <li><a href="#w6">W6 · Discount codes</a></li>
+    <li><a href="#w7">W7 · The free gift ladder</a></li>
+    <li><a href="#w8">W8 · Checkout verification</a></li>
+    <li><a href="#w9">W9 · Troubleshooting</a></li>
+  </ol>
+</div>
+
+<h2 id="how">How to use this page</h2>
+
+<p>Each procedure follows the same five parts, in this order. Once you recognise them you can skim to the part you need.</p>
+
+<ul>
+  <li><strong>What this does.</strong> One sentence on the result, so you know when you are finished.</li>
+  <li><strong>Steps.</strong> Numbered, in order. Each step names the exact label you click, and says so when a step has a hidden consequence.</li>
+  <li><strong>You should see.</strong> The green box: what the screen looks like when the step worked.</li>
+  <li><strong>If it did not work.</strong> The amber box: the usual causes, and the check that tells them apart.</li>
+  <li><strong>How to undo.</strong> The shortest route back, before you try to diagnose anything.</li>
+</ul>
+
+<p>Three tags appear next to procedures. <span class="tag verified">verified</span> means the steps were performed and the result read back on 25 November 2026. <span class="tag unverified">described</span> means they come from the live screen or the code but were not performed. <span class="tag blocked">blocked</span> means someone else must decide or grant something first.</p>
+
+<div class="callout warn">
+  <h4>Before you change anything</h4>
+  <p>Open <code>seadon.co</code> in a second browser tab and leave it open. Comparing the storefront with the admin is how you tell a saved change from a preview, and it is the fastest way to notice you are about to publish to the live site.</p>
+</div>
+
+<h2 id="w0">W0 · Finding your way around the admin</h2>
+
+<p><strong>What this does.</strong> Takes you from a blank browser tab to the exact screen each procedure starts on. Nothing here changes the store.</p>
+
+<figure>
+  <div class="redacted">Screenshot omitted from this public copy. The original shows the admin home with 30 days of trading figures.</div>
+  <figcaption><b>Figure 1.</b> The admin home, omitted from this copy because the original shows 30 days of trading figures. The sidebar map it refers to is the numbered figure in <a href="00-start-here.html#s4">Start here, S4</a>.</figcaption>
+</figure>
+
+<table>
+  <thead><tr><th>Where you are going</th><th>Route from the sidebar</th><th>Direct address</th><th>Used in</th></tr></thead>
+  <tbody>
+    <tr><td>Themes and the theme editor</td><td>Online Store → Themes</td><td><code>admin.shopify.com/store/seadonlimited/themes</code></td><td>W1, W2, W7</td></tr>
+    <tr><td>Products</td><td>Products</td><td><code>…/products</code></td><td>W3</td></tr>
+    <tr><td>Collections</td><td>Products → Collections</td><td><code>…/collections</code></td><td>W4</td></tr>
+    <tr><td>Discount codes</td><td>Discounts</td><td><code>…/discounts</code></td><td>W6</td></tr>
+    <tr><td>Bundle and Black Friday pricing</td><td>Apps → Seadon Backer Program → Discount Rules</td><td><code>…/apps/seadon-backer-program</code></td><td>W5</td></tr>
+    <tr><td>Free gift settings</td><td>Online Store → Themes → live theme → Edit theme → Theme settings</td><td>Editor link, then the gear icon</td><td>W7</td></tr>
+  </tbody>
+</table>
+
+<p>A direct address is safe to paste into the address bar. It lands on the same screen the sidebar route reaches, and it skips the clicking. Use it once you know which screen you want.</p>
+
+<div class="callout">
+  <h4>Three habits that save time</h4>
+  <p>Press <code>Command</code> and <code>K</code> to search anything. Press <code>Command</code> and click a link to open it in a new tab, so the list you were reading stays put. Use the browser's back button instead of re-navigating: the admin keeps your filters when you go back.</p>
+</div>
+
+<h2 id="w1">W1 · Publish a theme change safely</h2>
+
+<p><strong>What this does.</strong> Changes something in the theme, checks it on a copy, and only then lets customers see it. Every visual change to the storefront goes through this sequence, even a one-word edit.</p>
+
+<p><span class="tag verified">verified</span> The screens and states here were opened and read on the live store on 25 November 2026. The test step is <span class="tag blocked">blocked</span> until the theme's test suite can run: page 3, A3.</p>
+
+<figure>
+  <img src="images/w1-themes.jpg" alt="Online Store Themes page: a performance strip with loading and interaction metrics, the live theme card for seadon.production/main with an Edit theme button, and a Draft themes list below it.">
+  <figcaption><b>Figure 2.</b> Online Store → Themes. The live theme is <code>seadon.production/main</code>, last saved 16 Nov 2026 at 12:27 am. Draft themes underneath include <code>seadon.old/main</code>, <code>Elevar Test 1</code>, a dev draft from April, and the 2025 Cyber Monday and Christmas themes.</figcaption>
+</figure>
+
+<h3>What you are looking at</h3>
+
+<p>The top card is the live theme. Two things prove it: it has no Draft label, and its card shows a working preview of the storefront. Everything below it is a copy, either a draft somebody made or an older theme kept for rollback.</p>
+
+<p>The performance strip above the cards reports speed for the last 30 days. On 25 November it read LCP 2019 milliseconds, INP 120 milliseconds and layout shift 0, all marked Good. Treat it as a trend line: a jump after a publish is the signal to roll back and look closer.</p>
+
+<h3>Steps</h3>
+
+<ol class="steps">
+  <li>Click <b>Online Store</b> in the sidebar, then <b>Themes</b>. Confirm the live card is the one at the top with no Draft label.</li>
+  <li>Open the live card's <b>…</b> menu at its right edge and click <b>Duplicate</b>. A new card appears in the Draft themes list within a few seconds.</li>
+  <li>Click <b>Edit theme</b> on the <em>copy</em>, not the live card. The editor opens, and the top bar names the theme you are editing. Read that name once before clicking anything.</li>
+  <li>Make the change in the copy. W2 covers section edits, W7 covers gift settings.</li>
+  <li>Preview the change on four pages at minimum: the home page, a product page, a collection page and the cart. Use the device toggle in the top bar to check the phone layout for anything with text or images.</li>
+  <li>Run the theme test suite on the same code you are publishing. The command and its current state are on page 3, A3. If the suite cannot run, say which pages you checked by hand and record the exception on page 5.</li>
+  <li>Back on <b>Online Store → Themes</b>, click <b>Publish</b> on the copy. Shopify asks you to confirm: read the theme name in the confirmation before accepting.</li>
+  <li>Keep the old theme as a draft. Do not delete it. That card is your rollback.</li>
+  <li>Copy the exact files you changed back into the <code>seadon.production</code> repository and commit them. Git is the source of truth: when the repository and the live theme disagree, the next upload silently reverts the storefront.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>After the publish, the Themes page shows your copy at the top with <b>Public</b> in the header, and the old theme below it with a Draft label. The storefront in your second tab shows the new version after a normal reload.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>Nothing changed on the storefront.</strong> You published a different theme, or you edited the live theme and never pressed Save. Compare the last-saved time on the live card with the time of your edit.</p>
+  <p><strong>The site looks broken.</strong> Roll back first and diagnose second. Publish the previous theme, which is still in the draft list.</p>
+  <p><strong>The editor shows an error banner.</strong> A section references a file that no longer exists, or the change is invalid. Nothing is published while the banner is up.</p>
+</div>
+
+<p><strong>How to undo.</strong> Online Store → Themes → the <b>…</b> menu on the previous theme → <b>Publish</b>. That reverts every template, section and setting at once, in seconds, and it is the right response to any storefront breakage.</p>
+
+<h2 id="w2">W2 · Homepage changes</h2>
+
+<p><strong>What this does.</strong> Edits text, images, links and section order on the home page. Changes reach the live theme when you press Save in the editor, so work on the copy from W1 unless the change is trivial and reviewed.</p>
+
+<figure>
+  <img src="images/w2-theme-editor.jpg" alt="Shopify theme editor on the home page: the left sidebar lists sections grouped into header, template and footer, the preview shows the Black Friday hero with gift thresholds, and the top bar holds the template selector, device toggles and Save.">
+  <figcaption><b>Figure 3.</b> The theme editor. The left list is the page in order: header group, template sections, footer group, then popups. Clicking a row opens its settings. The top bar carries the page selector (<b>Home page</b>), the desktop and phone toggles, undo and redo, and <b>Save</b>.</figcaption>
+</figure>
+
+<p>The live home page runs these sections, in order, as read from the editor on 25 November 2026:</p>
+
+<ul>
+  <li><strong>Header group:</strong> Announcement bar, Header.</li>
+  <li><strong>Template, part 1:</strong> Slideshow: Full frame, The Difference in the Fabric, One system. Three ways to move, Our Best Sellers.</li>
+  <li><strong>Template, part 2:</strong> Shop New Caps, Shop by Fabric (currently hidden), Signature Fabric, Shop by Category, Next Kickstarter, Buy Better Tread Lighter (two instances, one hidden), Custom section, They Love the Brand.</li>
+  <li><strong>Footer group:</strong> Footer, Bottom Footer, Donated Org, Policies and links.</li>
+  <li><strong>Popups:</strong> a Background popup, and the Split popup that draws the Black Friday panel.</li>
+</ul>
+
+<h3>Changing a line of text</h3>
+
+<ol class="steps">
+  <li>Open the editor on the theme copy and confirm the selector reads <b>Home page</b>.</li>
+  <li>Click the section row in the left list. Its settings appear on the right and the section gains a blue outline in the preview.</li>
+  <li>Click the field you want, for example a heading or a body text box. Select all the text with <code>Command</code> and <code>A</code> and type the replacement. Type plainly: the theme applies its own capitals and weight.</li>
+  <li>Press <b>Save</b> in the top bar. The button goes grey once the save lands.</li>
+  <li>Reload the storefront tab. The new text appears.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>While typing, the change shows in the preview and the Save button turns dark, meaning something is pending. After Save, the button is grey again and the preview still shows the change.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The field will not accept typing.</strong> The block inherits its text from theme settings. Look for a note under the field, or edit the text in Theme settings instead.</p>
+  <p><strong>The preview updates but the store does not.</strong> Save was not pressed, or you are editing a draft theme. Check the theme name in the top bar.</p>
+  <p><strong>The text runs off the screen on a phone.</strong> The field has a practical limit by design: shorten the sentence rather than shrinking the font.</p>
+</div>
+
+<h3>Changing an image</h3>
+
+<ol class="steps">
+  <li>Open the section and click the image picker. A panel of existing store images appears, with an upload button at the top.</li>
+  <li>Choose an existing image where one fits. Upload only when none does, and prefer a wide photo over a tall one: tall images crop badly on phones.</li>
+  <li>If the section asks for alt text, describe what the image shows in one short sentence. Screen readers and search engines use it.</li>
+  <li>Save, then check the phone preview before you leave.</li>
+</ol>
+
+<h3>Adding, hiding or removing a section</h3>
+
+<p>Use <b>+ Add section</b> inside the group where it belongs. Its position in the left list is its position on the page, and dragging a row reorders it. The eye icon hides a section without deleting it.</p>
+
+<p>Hiding is reversible and deleting is not: a deleted section takes its settings with it. Hide first, wait a week, and delete only if nobody asks for it back.</p>
+
+<figure>
+  <img src="images/w2-theme-settings.jpg" alt="Theme settings sidebar listing twenty categories from Logo and favicon through Colors, Typography, Cart, Product cards, Search and Swatches to Free gift and Custom CSS.">
+  <figcaption><b>Figure 4.</b> Theme settings holds store-wide values: colours, typography, cart, product cards, swatches, and the <b>Free gift</b> group used in W7. Free gift sits second from the bottom, just above Custom CSS.</figcaption>
+</figure>
+
+<div class="callout warn">
+  <h4>Two settings that bite</h4>
+  <p>Theme settings apply to every page that uses them, so a colour or price-format change is never local to the page you are previewing. And <b>Custom CSS</b> at the bottom of Theme settings overrides the theme's own styles: before debugging a style problem anywhere else, check whether a rule there is responsible.</p>
+</div>
+
+<h2 id="w3">W3 · Product page changes</h2>
+
+<p><strong>What this does.</strong> Edits a product's title, description, photos, price, stock or collection membership. Product data saves directly, with no separate publish step.</p>
+
+<figure>
+  <img src="images/w3-products.jpg" alt="Products list with inventory metrics above a table of products showing status, inventory across variants, category, channels, catalogs, product type, vendor and updated time.">
+  <figcaption><b>Figure 5.</b> Products. The columns used in routine work are Status, Inventory, Category, Channels and Updated. Search and filter sits above the table; Add product sits top right.</figcaption>
+</figure>
+
+<h3>Reading the list before you open anything</h3>
+
+<ul>
+  <li><strong>Status.</strong> Active means customers can buy it. Draft means unfinished and invisible. Unlisted means the page works but is hidden from search and collections.</li>
+  <li><strong>Inventory.</strong> A number beside a variant count, for example 28 variants. An empty or red value means at least one variant cannot be sold.</li>
+  <li><strong>Channels and Catalogs.</strong> Nine channels and eleven catalogs is normal here. A product with fewer is usually a draft that has not been published.</li>
+</ul>
+
+<h3>Steps</h3>
+
+<ol class="steps">
+  <li>Click <b>Products</b> and use <b>Search and filter</b>. Search the colour name as well as the style name: each colourway is a separate product.</li>
+  <li>Click the product name. The edit page opens.</li>
+  <li>Change the title, description or media in the left column. Change status, publishing or organisation in the right column. Nothing saves until you press Save.</li>
+  <li>For price or stock, scroll to Variants. Price, SKU, barcode and inventory all belong to the variant, not the product.</li>
+  <li>Press <b>Save</b>. The page reloads with your values in place.</li>
+  <li>Open the product page on the storefront and check the result, including the variant selector if you changed variants.</li>
+</ol>
+
+<figure>
+  <img src="images/w3-product-detail.jpg" alt="Product edit page for Seadon Unisex EXP Travel Pants in Atlantic Blue: title, description editor, media gallery, category suggestions, variants, and a right column with status, publishing, sales past 90 days and collection chips.">
+  <figcaption><b>Figure 6.</b> A product page. The right column carries Status, Publishing, Sales past 90 days and Product organization. The collection chips under Product organization are how a product joins a page such as Men's Travel Pants.</figcaption>
+</figure>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>After Save, the product list row shows the new title and a fresh Updated time. On the storefront the product page shows the new text and photos after a normal reload.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The storefront still shows the old description.</strong> A channel cache is serving the old copy. Reload with <code>Command</code>, <code>Shift</code> and <code>R</code> and look again.</p>
+  <p><strong>The price changed but the cart shows the old one.</strong> You edited the product, not the variant. Scroll to Variants and check each size.</p>
+  <p><strong>The product is missing from a collection.</strong> The collection is automated and the title no longer matches its rule, or the product is Draft.</p>
+</div>
+
+<div class="callout warn">
+  <h4>Colourways are separate products</h4>
+  <p>The store models each colour as its own product and links the family through the <code>product.color_variant_products</code> metafield. Adding a colour means creating a product and adding the link, not adding an option to an existing product. Getting this wrong splits a family across the pickers and breaks family-aware bundle and gift logic, which is the class of bug behind order #17052.</p>
+</div>
+
+<h2 id="w4">W4 · Collections</h2>
+
+<p><strong>What this does.</strong> Controls which products appear together on a page such as Women's Travel or Best Sellers.</p>
+
+<figure>
+  <img src="images/w4-collections.jpg" alt="Collections list with rows of women's collections such as Seadon Women's Traveler Merino Tee, Travel, Short Sleeve, Run and Merino SF100 Long Sleeve, each with a checkbox and thumbnail.">
+  <figcaption><b>Figure 7.</b> Collections. Most rows are automated: a new product joins them by matching a rule, without anyone adding it by hand.</figcaption>
+</figure>
+
+<h3>Two kinds of collection, and why the difference matters</h3>
+
+<table>
+  <thead><tr><th>Kind</th><th>How products get in</th><th>What you edit</th></tr></thead>
+  <tbody>
+    <tr><td>Automated</td><td>A rule, for example "Title contains Women's Traveler Merino Tee"</td><td>The rule. Adding products by hand is pointless: the next evaluation rebuilds the list.</td></tr>
+    <tr><td>Manual</td><td>Someone adds each product</td><td>The product list itself, with Add products and remove.</td></tr>
+  </tbody>
+</table>
+
+<ol class="steps">
+  <li>Open <b>Products → Collections</b> and click the collection.</li>
+  <li>Read the condition at the top of the right column. If it names a rule, the collection is automated.</li>
+  <li>For an automated collection, edit the condition. For a manual collection, use <b>Add products</b> and remove items individually.</li>
+  <li>Check the publish state: the line under the title reports the number of channels. A collection published to no channel is invisible.</li>
+  <li>Press <b>Save</b>.</li>
+  <li>Open the collection page on the storefront and count the products against the editor's count.</li>
+</ol>
+
+<figure>
+  <img src="images/w4-collection-detail.jpg" alt="Collection edit page for Seadon Women's Traveler Merino Tee showing the automated condition Title contains Women's Traveler Merino Tee, six collection items, three of them marked Draft.">
+  <figcaption><b>Figure 8.</b> An automated collection. The condition fills the grid. Three of the six items are Draft, and Draft products do not render on the storefront even when the rule matches them.</figcaption>
+</figure>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>The product count in the editor matches the number of cards on the storefront page. If the editor says six and the store shows three, the other three are Draft or Unlisted.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The page is short of products.</strong> Check the status of the missing items before touching the rule.</p>
+  <p><strong>A new product is missing from every collection.</strong> Its title matches no rule and it was not added by hand. Fix the title or add it to the manual collections.</p>
+  <p><strong>The collection is empty after an edit.</strong> The condition now matches nothing. Use the browser back button if you have not saved, or restore the previous condition and save.</p>
+</div>
+
+<h2 id="w5">W5 · Bundle pricing</h2>
+
+<p><strong>What this does.</strong> Sets the price for multi-item bundles and Black Friday single prices. These are not Shopify discounts: they live in one document, and the theme asks the app to price the cart from it.</p>
+
+<figure>
+  <img src="images/sbp-discount-rules.jpg" alt="Discount Rules editor in the Seadon Backer Program app: a status line reading Loaded 15 groups and 268 assignments, a merino group with 30 and 40 percent tiers and Black Friday single prices, and a second group with a buy two get one free tier.">
+  <figcaption><b>Figure 9.</b> Discount Rules → Editor. On 25 November 2026 it loaded <b>15 groups and 268 assignments</b>. The <code>merino</code> group carries two percent tiers and per-product Black Friday prices; <code>gate-v2</code> carries a buy-two-get-one-free tier. Raw JSON is the same document without the form.</figcaption>
+</figure>
+
+<h3>What the pieces mean</h3>
+
+<table>
+  <thead><tr><th>Piece</th><th>What it does</th><th>What to watch</th></tr></thead>
+  <tbody>
+    <tr><td>Group</td><td>A family of products sharing a price ladder, identified by a key such as <code>merino</code>.</td><td>Assignments point at the key. Renaming it orphans every assignment that used it.</td></tr>
+    <tr><td>Mixable</td><td>Lets colours and products in the group pool toward one quantity threshold.</td><td>Tick it only where the offer genuinely mixes items. On a single-product offer it lets two colours count as a pair.</td></tr>
+    <tr><td>Tier</td><td>A quantity plus a price rule: percent off each unit, a set price, or buy N get X free.</td><td>The threshold means "this many or more", so a three-item tier also prices four and five.</td></tr>
+    <tr><td>BF single price</td><td>The price of one unit during the sale, for named products.</td><td>These override percent tiers. Left in place after the campaign, they keep selling at the sale price.</td></tr>
+    <tr><td>Family selector</td><td>Catches products the assignment map has not seen, by title, tag or product type.</td><td>A broad selector pulls in products you did not intend to discount.</td></tr>
+  </tbody>
+</table>
+
+<ol class="steps">
+  <li>Open <b>Apps → Seadon Backer Program → Discount Rules</b>.</li>
+  <li>Read the status line. It reports how many groups and assignments loaded. A failure to load means the document is malformed and nothing can be priced: stop and restore the last good version.</li>
+  <li>Find the group by its identifier, not its label. Labels are for humans; the identifier is what the rest of the system uses.</li>
+  <li>Edit the tier. Choose the rule type first, then the number. Percent off each unit, a fixed set price and buy N get X free are not interchangeable: the wrong type applies the discount to the wrong base.</li>
+  <li>Press the save button at the bottom of the page. The editor validates on the server, so a malformed document is rejected instead of reaching the cart.</li>
+  <li>Verify in a real cart: add the qualifying items on the storefront and read the line prices and the discount row.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>The status line keeps its group and assignment counts after saving. In the cart, the qualifying items show the discounted unit price straight away and the discount row names the offer.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The cart price did not change.</strong> The product may not be in the group's assignment map. Watch the assignment count before and after your edit: if it did not move, the tier changed but no products joined.</p>
+  <p><strong>Every bundle price vanished.</strong> The document is invalid or empty. Restore the last good JSON and save again.</p>
+  <p><strong>The discount is larger than intended.</strong> Two plans are priced for each cart and the cheaper one wins, so a legacy per-product price can undercut your new tier.</p>
+</div>
+
+<div class="callout warn">
+  <h4>What not to touch</h4>
+  <p>The <b>BF single price</b> rows override percentage tiers for named products during the sale. A Black Friday unit price left in place after the campaign is the most likely way to sell a product at the sale price for months. Closing the campaign means deleting those rows as well as the announcement bar.</p>
+</div>
+
+<h2 id="w6">W6 · Discount codes</h2>
+
+<p><strong>What this does.</strong> Creates and retires discount codes such as <code>WELCOME10</code>. Codes are a different mechanism from bundle prices: a code applies at checkout, while bundle prices are computed before the cart.</p>
+
+<figure>
+  <img src="images/w6-discounts.jpg" alt="Shopify Discounts page listing WELCOME10, PURCHASE15 and WINBACK15 codes next to single use OK codes, with method, code counts, status and used columns.">
+  <figcaption><b>Figure 10.</b> Discounts. Every visible row is an amount-off-order code set: 10 percent for <code>WELCOME10</code>, 15 percent for <code>PURCHASE15</code>, mostly generated in batches of about a hundred codes, with single-code entries from other integrations. Two <code>WINBACK15</code> entries have expired.</figcaption>
+</figure>
+
+<h3>Creating a code</h3>
+
+<ol class="steps">
+  <li>Open <b>Discounts</b>, then <b>Create discount</b> at the top right.</li>
+  <li>Choose the type: amount off order for a whole-basket offer, amount off product for one item, free shipping for delivery.</li>
+  <li>Set the value and the code. Codes are case sensitive to the customer, so choose something easy to spell.</li>
+  <li>Set eligibility. All customers is the default; restrict it only when the offer is meant to be targeted.</li>
+  <li>Set the dates. A code with no end date stays live until someone removes it, which is how expired offers come back to life.</li>
+  <li>Decide combinations deliberately. A percentage code stacks on top of bundle prices, which multiplies the discount beyond what the bundle was designed to give.</li>
+  <li>Save, then test the code in a real cart before announcing it.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>The discount appears at the top of the list with a green Active badge. In a test cart the code box accepts the code and the total drops by the expected amount.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The code is rejected in the cart.</strong> It is expired, limited to a customer segment the shopper is not in, or its uses are exhausted.</p>
+  <p><strong>The discount is smaller than expected.</strong> The code applied to a cart that was already bundle-priced, and this code type does not stack the way you assumed.</p>
+  <p><strong>Two codes will not combine.</strong> Combination rules are set per discount, not globally.</p>
+</div>
+
+<h2 id="w7">W7 · The free gift ladder</h2>
+
+<p><strong>What this does.</strong> Sets the spend thresholds that give a customer a free gift, and which products count as gifts. The customer sees a ladder in the cart, picks a gift, and the gift is added at checkout rather than to the cart.</p>
+
+<figure>
+  <img src="images/w8-cart.jpg" alt="Storefront cart page with an empty cart, a milestone ladder showing 0 dollars, 100 dollars for shipping, 175 dollars for the first gift and 225 dollars for the bonus gift, and a Merino buy two save thirty percent banner.">
+  <figcaption><b>Figure 11.</b> The cart ladder as a customer sees it: shipping at $100, first gift at $175, bonus gift at $225, with the Merino bundle banner above. This is the storefront rendering of the thresholds configured in Theme settings → Free gift.</figcaption>
+</figure>
+
+<p>Two systems share this feature. The thresholds and gift products live in the theme, in Theme settings → <b>Free gift</b>. The decision about whether a shopper gets a gift, and the count of gifts already sent, lives in the app. The app reads the theme's settings itself, so the theme is the single place you edit.</p>
+
+<p>The keys behind the panel are in <code>config/settings_schema.json</code> from line 2484: <code>gift_enabled</code>, <code>gift_rung1_threshold</code>, <code>gift_rung1_products</code>, <code>gift_rung1_slots</code>, <code>gift_rung1_mode</code>, the matching <code>gift_rung2_*</code> keys, <code>gift_order_limit</code>, and the customer-facing messages.</p>
+
+<p>The published values differ from the schema defaults. The live thresholds are USD 175 and USD 225, not the default 150 and 200. Rung 2 is set to add a gift rather than replace rung 1, which is why the cart offers two picks above the second threshold.</p>
+
+<ol class="steps">
+  <li>Open the theme editor and click <b>Theme settings</b> in the top-left icon row, then <b>Free gift</b>. It sits second from the bottom of the list, just above Custom CSS.</li>
+  <li>Set the rung 1 threshold and its product list. Thresholds are written per currency as <code>CODE:AMOUNT</code> pairs, comma separated, because the store sells in several currencies.</li>
+  <li>Set rung 2 and choose the mode: replace the rung 1 gift, or add the second gift on top. The mode changes the number of picks a shopper gets, not the slot fields (see the callout below).</li>
+  <li>Set the order limit. Lowering it below the number already given away cannot take back gifts already sent.</li>
+  <li>Save, then verify on the storefront: add items past the threshold and pick a gift in the cart.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>The ladder highlights the stop you have reached and offers a picker with the configured products. A chosen gift appears at zero on the checkout page, and the gift counter in <code>/api/health</code> moves by one once the order is paid.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The ladder is right but there is no picker.</strong> The gift is disabled, the theme id is not in the app's allowlist, the theme settings are unreadable, or the counter is unreachable. Check <code>/api/health</code> before the cart JavaScript.</p>
+  <p><strong>The picker offers the wrong products.</strong> The product list stores handles, not titles. A renamed product leaves a dead handle behind.</p>
+  <p><strong>A shopper says the ladder showed a gift they could not pick.</strong> The tier bar and the picker read gift state differently when the quote call is slow. Check whether the quote endpoint answered.</p>
+</div>
+
+<div class="callout warn">
+  <h4>The slot fields do nothing</h4>
+  <p><code>gift_rung1_slots</code> and <code>gift_rung2_slots</code> are stored and displayed, but the cart script fixes the counts in code: one pick at rung 1, two at rung 2 only when the mode is add. Editing the slot numbers has no storefront effect, so a complaint about the number of picks is a mode question, not a settings question.</p>
+</div>
+
+<div class="callout warn">
+  <h4>The tier bar and the picker can disagree</h4>
+  <p>Two scripts read gift state. The picker refuses to fall back to the cart total, while the tier bar does fall back when the quote call fails. On a slow quote the bar can show the second gift as available before the picker will grant it.</p>
+</div>
+
+<h2 id="w8">W8 · Checkout verification</h2>
+
+<p><strong>What this does.</strong> Proves that the cart, the app's quote and Shopify's checkout agree on a price before customers find out they do not. <span class="tag unverified">described</span> No test order was placed while writing this page, so run it once as a rehearsal and correct the steps if anything differs.</p>
+
+<ol class="steps">
+  <li>Choose the smallest real product that qualifies for a bundle, and put a qualifying combination in the cart.</li>
+  <li>Add items past the gift threshold and open the gift picker. Choose the smaller gift.</li>
+  <li>If you are testing a claim, log in as the test backer account and start a claim. Never use a real backer's account.</li>
+  <li>Read the cart lines before checkout: bundle unit prices, the gift line at zero, the claim line at the backer price. Write the totals down.</li>
+  <li>Go to checkout. Confirm the same totals, the same discount row, and that the gift line survives into checkout.</li>
+  <li>Place the order only if you can refund it. Then refund it and cancel the fulfilment, and confirm the gift counter and claim state settle where they should.</li>
+  <li>If you cannot place a real order, stop at the payment step and compare the totals there. That catches most pricing faults without spending money.</li>
+</ol>
+
+<div class="check">
+  <h4>You should see</h4>
+  <p>Three numbers agree: the cart total, the checkout subtotal, and the amount on the payment screen. A gift appears as a zero-value line. A claim appears with its reservation id in the order's line-item properties.</p>
+</div>
+
+<div class="fail">
+  <h4>If it did not work</h4>
+  <p><strong>The cart is right and checkout is wrong.</strong> The quote endpoint and the checkout endpoint disagree. Suspect a stale pricing document before the theme.</p>
+  <p><strong>The gift disappears at checkout.</strong> It was chosen after the quote was fetched, or the counter refused it. Reopen the cart and repick.</p>
+  <p><strong>A claim invoice will not open.</strong> The draft order expired after 30 minutes. Start the claim again from the portal.</p>
+</div>
+
+<h2 id="w9">W9 · Troubleshooting</h2>
+
+<p>Read the symptom in the first column, then do the check in the second. The third column names the cause that most often produces that symptom in this store.</p>
+
+<table>
+  <thead><tr><th>Symptom</th><th>Check</th><th>Likely cause and fix</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Storefront shows the old content after a theme save</td>
+      <td>Reload with the cache bypassed; compare the theme card's last-saved time with the time of the edit</td>
+      <td>The save did not reach the live theme, or a CDN copy is being served. Confirm which theme the editor had open.</td>
+    </tr>
+    <tr>
+      <td>Gift picker missing in the cart although the ladder shows</td>
+      <td>Theme settings → Free gift: <code>gift_enabled</code>; then the app's <code>/api/health</code></td>
+      <td>Gift disabled in settings, theme id not allowlisted, theme settings unreadable, or the counter unreachable in Redis.</td>
+    </tr>
+    <tr>
+      <td>Bundle discount not applied at the cart</td>
+      <td>Discount Rules: does a group cover this product, and is the assignment counted in the status line?</td>
+      <td>Product not in the assignment map, wrong group identifier, or a tier whose quantity threshold is higher than the cart contents.</td>
+    </tr>
+    <tr>
+      <td>Two of the same item picked as gifts instead of a cap and a tee</td>
+      <td>Pick identity after a colourway switch; the regression test is <code>tests/cart-gift-picks.test.js</code></td>
+      <td>Family classification matched a colourway substring, or the pick was keyed on a mutable handle. Covered by tests; if it recurs, the fix regressed.</td>
+    </tr>
+    <tr>
+      <td>Collection page short of products</td>
+      <td>The status of the missing items</td>
+      <td>Draft or Unlisted products do not render even when the automated condition matches them.</td>
+    </tr>
+    <tr>
+      <td>Checkout total differs from the cart total</td>
+      <td>The quote response compared with the checkout lines</td>
+      <td>Stale pricing document, a code stacking on bundle prices, or currency-specific threshold format. Fix the document, not the theme.</td>
+    </tr>
+    <tr>
+      <td>404 on a link from an old campaign</td>
+      <td>The Redirect tab in the Backer Program app, searching the old path</td>
+      <td>The product was renamed and no redirect covers the old handle. Add it in the Redirect tab.</td>
+    </tr>
+    <tr>
+      <td>Something looks wrong and you do not know what you changed</td>
+      <td>Your last Save is the only record, which is why changes go through a copy</td>
+      <td>Publish the previous theme to restore the storefront, then re-apply the intended change on a fresh duplicate.</td>
+    </tr>
+  </tbody>
+</table>
+
+</main>
+
+<footer>
+  <div>
+    <p>Page 1 of 5 · compiled 25 November 2026 · screenshots captured the same day from the live admin.</p>
+    <p>Next: <a href="02-backer-program-operations.html">Backer Program operations</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

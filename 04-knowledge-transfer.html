@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4 · Knowledge transfer with Lisa and Leo</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon handover · page 4 of 5</p>
+  <h1>Knowledge transfer with Lisa and Leo</h1>
+  <p class="lede">Five sessions, each with an agenda, pre-work, one artefact that must exist afterwards, and a sign-off line. The written pages replace the recordings, so a session is for questions and hands-on practice, not for watching someone click.</p>
+  <p class="meta">Proposed dates run from 27 November to 12 December 2026, with sign-off on 16 December. Dates are proposals until confirmed.</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html" aria-current="page">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<div class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#k0">K0 · How the sessions run</a></li>
+    <li><a href="#k1">K1 · Who attends and what each owns</a></li>
+    <li><a href="#k2">K2 · The five sessions</a></li>
+    <li><a href="#k3">K3 · Schedule</a></li>
+    <li><a href="#k4">K4 · Sign-off log</a></li>
+  </ol>
+</div>
+
+<h2 id="k0">K0 · How the sessions run</h2>
+
+<p>A session is a working meeting, ninety minutes, screen shared, one laptop each. The rule is that whoever is learning drives for at least half of it: the outgoing engineer states the task, the successor performs it, the engineer watches and corrects. A session where only the engineer clicked has not transferred anything.</p>
+
+<ul>
+  <li><strong>Before the session:</strong> both attendees read the page that covers the topic. Reading first is what makes ninety minutes enough.</li>
+  <li><strong>During:</strong> one live task done by the successor, in a duplicate theme or the dry run, never on live pricing.</li>
+  <li><strong>After:</strong> the artefact exists (a note, a fixed test suite, a filled table), and the session moves to "signed off" in K4. An artefact nobody wrote is a session that did not happen.</li>
+  <li><strong>Recorded:</strong> no. These pages are the record, and each session's corrections go into them the same day.</li>
+</ul>
+
+<div class="callout">
+  <h4>Corrections go in the document, not into memory</h4>
+  <p>If a step in page 1 or page 2 turns out to be wrong when the successor runs it, fix the page during the session. The document is the handover; a verbal correction dies with the call.</p>
+</div>
+
+<h2 id="k1">K1 · Who attends and what each owns</h2>
+
+<p>The handover plan names a single successor ("Carson plus incoming engineer"). The responsibilities are being split between Lisa and Leo, and the split is not yet written down anywhere.</p>
+
+<p><span class="tag blocked">blocked</span> <strong>Action needed:</strong> confirm which of the two owns storefront content, which owns the Backer Program, and who is accountable for access and credentials. Until that is decided, every session below is attended by both, which doubles the calendar load and halves the depth.</p>
+
+<table>
+  <thead><tr><th>Area</th><th>Owner</th><th>Backup</th></tr></thead>
+  <tbody>
+    <tr><td>Storefront content: homepage, product pages, collections</td><td><em>to confirm</em></td><td><em>to confirm</em></td></tr>
+    <tr><td>Pricing: bundles, Black Friday, discount codes, gifts</td><td><em>to confirm</em></td><td><em>to confirm</em></td></tr>
+    <tr><td>Backer Program: imports, claims, campaigns</td><td><em>to confirm</em></td><td><em>to confirm</em></td></tr>
+    <tr><td>Access, deployment, credentials</td><td><em>to confirm</em></td><td><em>to confirm</em></td></tr>
+  </tbody>
+</table>
+
+<h2 id="k2">K2 · The five sessions</h2>
+
+<h3>Session A · Storefront architecture and content editing</h3>
+<p><strong>Pre-work:</strong> page 1, sections W0 to W4. <strong>Duration:</strong> 90 minutes.</p>
+<ol class="steps">
+  <li>Walk the theme structure in the editor: which sections build the home page, what a JSON template is, why the header and footer are groups.</li>
+  <li>Successor edits a homepage section in a duplicate theme and previews it, including the mobile view.</li>
+  <li>Successor creates a product, adds it to an automated collection, and explains why the condition fills the grid rather than the product list.</li>
+  <li>Colourway-as-product model: show the <code>product.color_variant_products</code> metafield and what breaks when a colourway is modelled as a variant instead.</li>
+  <li>Close with the publish sequence from W1 and the rollback, said out loud by the successor.</li>
+</ol>
+<p><strong>Artefact:</strong> a list of the sections on the live home page, written by the successor, with the owner of each piece of copy.</p>
+
+<h3>Session B · Bundle builder, gifts and the cart</h3>
+<p><strong>Pre-work:</strong> page 1, sections W5 and W7; page 2, section B4. <strong>Duration:</strong> 90 minutes.</p>
+<ol class="steps">
+  <li>Trace one bundle from product page to cart: which script, which app endpoint, which document decides the price.</li>
+  <li>Successor changes a tier in Discount Rules in a scratch group, then reads the resulting quote in a cart, then removes the scratch group.</li>
+  <li>Free gift ladder: change a threshold in a duplicate theme, verify the ladder in the cart, then explain why an unreadable theme disables gifts rather than falling back.</li>
+  <li>Failure drill: explain how the two-tees-instead-of-cap-and-tee bug happened and which test guards it.</li>
+</ol>
+<p><strong>Artefact:</strong> one cart screenshot taken by the successor, annotated with where each price came from.</p>
+
+<h3>Session C · Backer Program deep dive</h3>
+<p><strong>Pre-work:</strong> page 2, sections B0 to B3. <strong>Duration:</strong> 120 minutes.</p>
+<ol class="steps">
+  <li>Dashboard: read the five cards and the claim status table without help, then explain what "not in rules" means.</li>
+  <li>Import a small CSV in dry run and read the result panel line by line.</li>
+  <li>Claim lifecycle: walk a single claim from unclaimed to claimed on a test customer, then replay the finalise step to show idempotency.</li>
+  <li>Campaign rules: show where the reward mapping lives and what the pivot check refuses.</li>
+</ol>
+<p><strong>Artefact:</strong> the claim states table from page 2, rewritten in the successor's own words with one real claim id per state.</p>
+
+<h3>Session D · Infrastructure, deployment and credentials</h3>
+<p><strong>Pre-work:</strong> page 3, all sections. <strong>Duration:</strong> 90 minutes.</p>
+<ol class="steps">
+  <li>Deploy the app to a preview (not production) and read the deployment log.</li>
+  <li>Run the app test suite and the theme test suite; show the missing <code>package.json</code> and apply the fix, if the change is approved.</li>
+  <li>Walk the access table row by row, confirming who holds each system today and what the successor will hold after.</li>
+  <li>Health and cron checks: <code>/api/health</code>, the two crons, the webhook re-registration endpoints, and the egress probe.</li>
+</ol>
+<p><strong>Artefact:</strong> the access table on page 3 updated with the real transfer status of each row, plus a first successful preview deploy by the successor.</p>
+
+<h3>Session E · Fire drills</h3>
+<p><strong>Pre-work:</strong> page 1, W9; page 2, B6; page 3, A4. <strong>Duration:</strong> 90 minutes.</p>
+<ol class="steps">
+  <li>Roll back a theme publish, live, on a duplicate: publish deliberately, then publish the previous theme back.</li>
+  <li>Re-register the orders-paid webhook and confirm the health endpoint reflects it.</li>
+  <li>Rebuild the customer mirror from the dashboard button, then from the cron endpoint.</li>
+  <li>Restore a malformed pricing document from the last good JSON and confirm quotes resume.</li>
+</ol>
+<p><strong>Artefact:</strong> a one-page incident card written by the successor: symptom, first check, first action, who to call.</p>
+
+<h2 id="k25">K2b · Questions each session must leave answerable</h2>
+
+<p>These are the questions a successor should be able to answer without notes after the session. If any answer needs a lookup, the session is not finished.</p>
+
+<ul>
+  <li>After session A: where do I change the text of the announcement bar, and how do I check it reached customers?</li>
+  <li>After session A: why is a collection short of products, and what do I check first?</li>
+  <li>After session B: where does a bundle price come from, and why is it not a discount code?</li>
+  <li>After session B: what do the slot fields in Free gift do, and what should I change instead?</li>
+  <li>After session C: what does each claim state mean, and what do I do in each?</li>
+  <li>After session C: what happens when a backer pays an invoice the claim no longer matches?</li>
+  <li>After session D: what has to be true before I deploy the app, and who is allowed to author the commit?</li>
+  <li>After session D: where does each credential live, and which one expires?</li>
+  <li>After session E: the store looks broken. What do I do in the first two minutes?</li>
+  <li>After session E: how do I re-register a webhook and confirm it worked?</li>
+</ul>
+
+<h2 id="k3">K3 · Schedule</h2>
+
+<p>Week 2 of the original plan (24 to 28 November) called for the theme walkthrough. Today is 25 November, so the schedule below re-cuts the remaining sessions rather than pretending week 2 happened as planned.</p>
+
+<table>
+  <thead><tr><th>Session</th><th>Proposed date</th><th>Attendees</th><th>Blocked by</th></tr></thead>
+  <tbody>
+    <tr><td>A · Storefront and content</td><td>Fri 27 Nov</td><td>Lisa, Leo, Logan</td><td>GitHub org access (page 3, row 1)</td></tr>
+    <tr><td>B · Bundles and gifts</td><td>Tue 2 Dec</td><td>Lisa, Leo, Logan</td><td>Nothing</td></tr>
+    <tr><td>C · Backer Program</td><td>Thu 4 Dec</td><td>Lisa, Leo, Logan</td><td>Campaign rules document readable to both</td></tr>
+    <tr><td>D · Infrastructure and access</td><td>Tue 9 Dec</td><td>Lisa, Leo, Logan, Carson for the access rows</td><td>Vercel membership decision</td></tr>
+    <tr><td>E · Fire drills</td><td>Thu 11 Dec</td><td>Lisa, Leo, Logan</td><td>Sessions A to D done</td></tr>
+    <tr><td>Sign-off and revocation</td><td>Wed 16 Dec</td><td>All</td><td>All artefacts written</td></tr>
+  </tbody>
+</table>
+
+<h2 id="k4">K4 · Sign-off log</h2>
+
+<p>One line per session, appended, never edited. A session counts as signed off only when its artefact exists and the successor says they can repeat the task alone.</p>
+
+<table>
+  <thead><tr><th>Date</th><th>Session</th><th>Signed off by</th><th>Artefact</th></tr></thead>
+  <tbody>
+    <tr><td></td><td>A</td><td></td><td></td></tr>
+    <tr><td></td><td>B</td><td></td><td></td></tr>
+    <tr><td></td><td>C</td><td></td><td></td></tr>
+    <tr><td></td><td>D</td><td></td><td></td></tr>
+    <tr><td></td><td>E</td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+</main>
+
+<footer>
+  <div>
+    <p>Page 4 of 5 · compiled 25 November 2026 · dates are proposals pending confirmation.</p>
+    <p>Next: <a href="05-progress.html">Handover progress</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

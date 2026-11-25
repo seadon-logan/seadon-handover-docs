@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 · Access, source code and deployment</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon handover · page 3 of 5</p>
+  <h1>Access, source code and deployment</h1>
+  <p class="lede">What must move to the successor, where each credential actually lives, how each repository deploys, and the order to do it in so nothing is revoked before its replacement works.</p>
+  <p class="meta">No secret values appear in this document. Every row names the holder and the storage location only.</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html" aria-current="page">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<div class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#a0">A0 · Three words that make this page readable</a></li>
+    <li><a href="#a1">A1 · Access inventory and transfer actions</a></li>
+    <li><a href="#a2">A2 · The two repositories</a></li>
+    <li><a href="#a3">A3 · Tests, and the state they are in</a></li>
+    <li><a href="#a4">A4 · Deployment procedures</a></li>
+    <li><a href="#a5">A5 · Transfer and revocation checklist</a></li>
+    <li><a href="#a6">A6 · Handling secrets</a></li>
+  </ol>
+</div>
+
+<h2 id="a0">A0 · Three words that make this page readable</h2>
+
+<p>Most of page 3 is tables about access. Three terms carry the rest, and they are ordinary ideas under technical names.</p>
+
+<dl>
+  <dt>Repository</dt>
+  <dd>A folder of code that remembers every change. Seadon has two: <code>seadon.production</code> for the theme, <code>seadon-backer-program</code> for the app. Both live on GitHub, and both can be copied to any laptop with one command. Reading a repository is harmless; pushing to it changes the product.</dd>
+
+  <dt>Deploy</dt>
+  <dd>Putting new code live. The app deploys through Vercel: you run one command and the live app updates within a minute. The theme deploys through Shopify: you publish a theme, and the storefront changes at once. A deploy is not a save. A save keeps a change on your machine.</dd>
+
+  <dt>Token</dt>
+  <dd>A long secret string that lets a program act on Shopify without a human password. The app holds one so it can read orders and write claims. Tokens live in Vercel's settings, never in code and never in a document. A token that leaks is a password that leaked.</dd>
+</dl>
+
+<h3>What goes wrong if access is not transferred properly</h3>
+
+<ul>
+  <li>The successor can log in but cannot deploy, because the deploy needs a token or an account they do not hold.</li>
+  <li>The app keeps working until the short-lived token expires, then claims and prices stop with no obvious cause.</li>
+  <li>Nobody can rotate a leaked credential, because only one person holds the account that mints tokens.</li>
+  <li>Shopify blocks bulk operations and the only fix sits behind an account nobody else can open.</li>
+  <li>Six months later the store needs an urgent theme fix, and the only person who knows the publish sequence has left.</li>
+</ul>
+
+<h2 id="a1">A1 · Access inventory and transfer actions</h2>
+
+<p>Seven systems carry the store. Two are already company owned and need only a grant; five sit with the outgoing engineer and need a deliberate handover. <span class="tag unverified">described</span> from the handover plan, section 4, with the repository facts re-checked against the clones on this machine.</p>
+
+<table>
+  <thead><tr><th>System</th><th>Held by today</th><th>Where the credential lives</th><th>Transfer action</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Shopify store admin, <code>seadonlimited.myshopify.com</code></td>
+      <td>Logan's staff account</td>
+      <td>Shopify staff login, two-factor on the account</td>
+      <td>Carson creates or converts a staff account for the successor with the same permissions; revoke Logan's after 16 December.</td>
+    </tr>
+    <tr>
+      <td>Shopify Admin API token (custom app "Seadon Backer Program")</td>
+      <td>Logan</td>
+      <td>Vercel environment variable <code>SHOPIFY_ADMIN_API_TOKEN</code>; a local <code>.env</code> with mode 600 outside git</td>
+      <td>Mint the permanent token from the app dashboard, store it in Vercel, revoke the short-lived one, then rotate once more at handover so the successor's token was never shared.</td>
+    </tr>
+    <tr>
+      <td>Vercel, team <code>seadon</code>, project <code>seadon-backer-program</code></td>
+      <td><code>logan@seadon.co</code>, sole member</td>
+      <td>Vercel account login</td>
+      <td>Either hand the account to the successor or add them as a member. A second member needs the Pro plan, which is a paid-plan decision for Carson.</td>
+    </tr>
+    <tr>
+      <td>GitHub, both repositories</td>
+      <td>Org <code>seadon-logan</code> since 18 November 2026</td>
+      <td>GitHub account and org membership</td>
+      <td>Add the successor to the org. Old <code>logansolaman</code> URLs redirect but should not be relied on.</td>
+    </tr>
+    <tr>
+      <td>Upstash Redis</td>
+      <td>Vercel Marketplace integration</td>
+      <td><code>UPSTASH_REDIS_REST_URL</code> and <code>UPSTASH_REDIS_REST_TOKEN</code> in Vercel</td>
+      <td>Follows the Vercel account automatically once the account is transferred. Verify the two variables still resolve after the transfer.</td>
+    </tr>
+    <tr>
+      <td>Google, Search Console, GA4, Tag Manager</td>
+      <td>Company Google account</td>
+      <td>Google account login</td>
+      <td>Already company owned. Grant the successor's Google account access to GA4 and the Tag Manager container <code>TVQT7M6R</code>.</td>
+    </tr>
+    <tr>
+      <td>Shopify dev dashboard, app settings and IP allowlist</td>
+      <td>Shopify partner login, org <code>the partner organisation id</code></td>
+      <td>Partner account login</td>
+      <td>Covered by the staff and permission transfer above; confirm the successor can open the app's IP restrictions screen.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout warn">
+  <h4>One measured discrepancy</h4>
+  <p>The theme clone on this machine still points at <code>github.com/logansolaman/seadon.production.git</code>, while the app clone points at <code>github.com/seadon-logan/seadon-backer-program.git</code>. If the org transfer is complete, update the theme remote before the first push from a new machine: <code>git remote set-url origin https://github.com/seadon-logan/seadon.production.git</code>.</p>
+</div>
+
+<h2 id="a2">A2 · The two repositories</h2>
+
+<table>
+  <thead><tr><th>Repository</th><th>Contains</th><th>Deploy mechanism</th><th>HEAD on 25 Nov 2026</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>seadon.production</code></td>
+      <td>Shopify OS 2.0 theme: 60 section files, templates, snippets, <code>assets/cart-gift.js</code>, <code>assets/bundle-builder-v2.js</code>, backer portal sections, product-information and featured-product stock guards, <code>tests/</code></td>
+      <td>Shopify admin duplicate, preview and publish; <code>scripts/push-theme-file.mjs</code> for single-file uploads. No CI</td>
+      <td><code>e2380c9</code> · "kalina: fix gift pick identity across colourway switches (order #17052)" · 16 Nov 2026</td>
+    </tr>
+    <tr>
+      <td><code>seadon-backer-program</code></td>
+      <td>Node 20 serverless app: embedded admin UI in <code>public/</code>, route table in <code>api/[...path].js</code>, handlers and pure modules in <code>lib/</code>, webhook and cron endpoints, <code>tests/</code>, plus <code>construct.md</code> as the module reference</td>
+      <td>Vercel, from the git checkout. Auto-deploys from git are deliberately off; a deploy is run by hand</td>
+      <td><code>76a1165</code> · "kalina: a configured gift must not gate a reward claim" · 23 Nov 2026</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Both repositories carry their own tests directory. Neither has CI that runs them on push, so the gate is the person deploying.</p>
+
+<h2 id="a3">A3 · Tests, and the state they are in</h2>
+
+<p><span class="tag verified">verified</span> Both suites were run on 25 November 2026 from a clean checkout on this machine.</p>
+
+<h3>The app suite works</h3>
+<pre><code>cd seadon-backer-program
+node --test tests/*.test.js
+# tests 288 · pass 288 · fail 0</code></pre>
+
+<p>288 tests, zero dependencies, roughly 200 milliseconds. The handover plan says 283, which was true at an earlier commit; treat 288 as the current count.</p>
+
+<h3>The theme suite does not run as documented</h3>
+
+<p>The plan tells the successor to run <code>npm test</code> in <code>seadon.production</code>. That cannot work today, and installing the missing modules is only half the fix.</p>
+
+<p>The repository has no <code>package.json</code>, so nothing records the test dependencies. Four files load <code>jsdom</code> (gift picks, bundle display, cart page, popup flow) and one loads <code>liquidjs</code> from a hardcoded <code>/tmp/lqtest</code> path (hero gate). Run against the checkout as it stands, the suite fails at import: <code>Cannot find module 'jsdom'</code>.</p>
+
+<p>Two of the six run without extra modules today. <code>header-menu-click.test.js</code> passes. <code>popup-signup-flow.test.js</code> fails one assertion: it re-queries the email input after <code>open()</code> replaced that node, so it reads <code>null</code>. That failure is a defect in the test harness, not in the storefront, and it will still be red after the dependencies are installed.</p>
+
+<p><span class="tag blocked">blocked</span> Fix, needs a commit to the theme repository:</p>
+
+<pre><code>cd seadon.production
+cat &gt; package.json &lt;&lt;'EOF'
+{
+  "name": "seadon.production",
+  "private": true,
+  "scripts": { "test": "node --test tests/*.test.js" },
+  "devDependencies": { "jsdom": "^25.0.1", "liquidjs": "^10.16.0" }
+}
+EOF
+npm install
+npm test</code></pre>
+
+<p>Then fix the popup harness assertion so the gate can go green, and add <code>node_modules</code> to <code>.gitignore</code> in the same commit. Until the suite passes, the theme publish step in W1 has no automated gate: publish the duplicate, walk the four representative URLs, and record the exception on page 5.</p>
+
+<h2 id="a4">A4 · Deployment procedures</h2>
+
+<h3>Deploying the app</h3>
+
+<pre><code>cd seadon-backer-program
+node --test tests/*.test.js          # 288 tests, all green before any deploy
+git config user.email logan@seadon.co
+vercel deploy --prod --yes            # deploys from the git checkout; alias updates</code></pre>
+
+<p>The identity rule is real: commits must be authored as <code>Logan Solaman &lt;logan@seadon.co&gt;</code> or Vercel blocks the deploy. <span class="tag unverified">described</span> A blocked deploy shows as a failed deployment in the Vercel dashboard, and the fix is to amend the author, not to retry.</p>
+
+<p>Before the first deploy under the successor's name, that rule needs a decision: keep <code>logan@seadon.co</code> as the deploy identity, or update the pipeline to accept the successor's address. Pick one, write it down here, and do not leave both.</p>
+
+<h3>Publishing the theme</h3>
+
+<p>Duplicate, edit the duplicate, preview, test, publish, then sync the files back into git. The full sequence and its rollback are on page 1, W1. Two hard rules: never edit the live theme in place, and remember that a publish is all or nothing across every template.</p>
+
+<p>One script bypasses the editor for targeted uploads: <code>scripts/push-theme-file.mjs</code> sends named repository files to the live theme through the Admin API. It reads <code>SEADON_PROD_ADMIN_TOKEN</code> from <code>~/.secrets/global.env</code>, is hardcoded to <code>seadonlimited.myshopify.com</code> and Admin API <code>2025-07</code>, and its usage text still names an older filename. Use it for a single urgent file, not as the normal path: the editor flow is what keeps the live theme and git in step.</p>
+
+<h2 id="a5">A5 · Transfer and revocation checklist</h2>
+
+<p>Order matters: nobody's access is revoked before the successor's works. Proposed dates assume the 16 December final working day and are proposals until Logan and Carson agree them.</p>
+
+<table>
+  <thead><tr><th>#</th><th>Action</th><th>Owner</th><th>Proposed date</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Add Lisa and Leo to the <code>seadon-logan</code> GitHub org, both repositories</td><td>Logan</td><td>by 27 Nov</td></tr>
+    <tr><td>2</td><td>Create or convert Shopify staff accounts with equivalent permissions</td><td>Carson</td><td>by 4 Dec</td></tr>
+    <tr><td>3</td><td>Mint the permanent Admin API token, store it in Vercel, revoke the short-lived token</td><td>Logan</td><td>by 27 Nov</td></tr>
+    <tr><td>4</td><td>Decide the Vercel membership route: transfer the account, or add members on a paid plan</td><td>Carson</td><td>by 4 Dec</td></tr>
+    <tr><td>5</td><td>Grant GA4 and Tag Manager access to the successor's Google account</td><td>Company Google account holder</td><td>by 4 Dec</td></tr>
+    <tr><td>6</td><td>Fill Shopify's IP allowlist with the Vercel egress range from <code>/api/egress-probe</code>, then test before enforcing</td><td>Logan</td><td>by 11 Dec</td></tr>
+    <tr><td>7</td><td>Rotate the Admin API token a final time so the successor's copy was never shared in transit</td><td>Logan with successor present</td><td>15 or 16 Dec</td></tr>
+    <tr><td>8</td><td>Revoke Logan's Shopify staff account, Vercel membership and org ownership</td><td>Carson</td><td>16 Dec, after sign-off</td></tr>
+    <tr><td>9</td><td>Confirm the storefront and app still deploy and run after each revocation</td><td>Lisa and Leo</td><td>16 Dec</td></tr>
+  </tbody>
+</table>
+
+<h2 id="a6">A6 · Handling secrets</h2>
+
+<ul>
+  <li>API tokens exist only in Vercel environment variables and in mode-600 <code>.env</code> files on the engineer's workstation. Never in git, never in a document, never in a ticket.</li>
+  <li>A credential pasted into chat, a document or a screenshot counts as compromised. Rotate it rather than deleting the message.</li>
+  <li>Redis connection strings travel with the Vercel project. If the project is transferred, verify them rather than re-pasting them anywhere.</li>
+  <li>The app's <code>/api/health</code> endpoint is deliberately unauthenticated and returns counts only; do not add identifiers to it.</li>
+  <li>No document in this set contains a secret. If you find one, tell Logan and rotate.</li>
+</ul>
+
+</main>
+
+<footer>
+  <div>
+    <p>Page 3 of 5 · compiled 25 November 2026 · repository facts measured from the local clones.</p>
+    <p>Next: <a href="04-knowledge-transfer.html">Knowledge transfer with Lisa and Leo</a>.</p>
+  </div>
+</footer>
+</body>
+</html>

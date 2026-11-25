@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2 · Backer Program operations</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <p class="kicker">Seadon handover · page 2 of 5</p>
+  <h1>Backer Program operations</h1>
+  <p class="lede">Running the app after handover: reading the dashboard, importing backers, following a claim from import to fulfilment, changing prices, and keeping the webhooks, crons and tokens alive.</p>
+  <p class="meta">App: <code>seadon-backer-program</code> · repository <code>seadon-logan/seadon-backer-program</code> at <code>76a1165</code> · screenshots captured 25 November 2026</p>
+</header>
+
+<nav class="pages" aria-label="Document set">
+  <ul>
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="00-start-here.html">Start here</a></li>
+    <li><a href="01-shopify-maintenance.html">1 · Shopify maintenance</a></li>
+    <li><a href="02-backer-program-operations.html" aria-current="page">2 · Backer Program</a></li>
+    <li><a href="03-access-and-code.html">3 · Access and code</a></li>
+    <li><a href="04-knowledge-transfer.html">4 · Knowledge transfer</a></li>
+    <li><a href="05-progress.html">5 · Progress</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+
+<div class="toc">
+  <p>On this page</p>
+  <ol>
+    <li><a href="#b0">B0 · What the app does and where its tabs are</a></li>
+    <li><a href="#b1">B1 · Backer management and the dashboard</a></li>
+    <li><a href="#b2">B2 · Campaign setup</a></li>
+    <li><a href="#b3">B3 · Reward claims, state by state</a></li>
+    <li><a href="#b4">B4 · Pricing configuration</a></li>
+    <li><a href="#b5">B5 · Ongoing maintenance</a></li>
+    <li><a href="#b6">B6 · Troubleshooting</a></li>
+  </ol>
+</div>
+
+<h2 id="b0">B0 · What the app does and where its tabs are</h2>
+
+<p>The Backer Program is a custom, single-merchant embedded Shopify app on Vercel. It powers the Kickstarter backer program, bundle and Black Friday pricing, the free gift giveaway, per-warehouse inventory visibility and order routing. It is dependency-free plain ES modules on Node 20; every request enters through one serverless function, <code>api/[...path].js</code>, and a route table dispatches it.</p>
+
+<h3>Getting to the app</h3>
+
+<ol class="steps">
+  <li>Click <b>Apps</b> in the admin sidebar, then <b>Seadon Backer Program</b>. The app opens inside the admin, so the sidebar stays visible.</li>
+  <li>Or paste <code>admin.shopify.com/store/seadonlimited/apps/seadon-backer-program</code> into the address bar.</li>
+  <li>You should see the app title, a row of tabs, and the store domain on the right.</li>
+</ol>
+
+<div class="fail">
+  <h4>If the app will not open</h4>
+  <p><strong>A message says it is not embedded.</strong> You opened the app's own address instead of the admin one. Use the address above.</p>
+  <p><strong>The page is blank or spins.</strong> The app deployment is down. Check <code>/api/health</code> in a new tab; a reply means the app is up and the problem is your session. Sign out and back in.</p>
+  <p><strong>You can see the tabs but no data.</strong> The dashboard is waiting for the customer mirror. Press <b>Refresh data</b> and give it a minute.</p>
+</div>
+
+<figure>
+  <img src="images/sbp-dashboard.jpg" alt="Seadon Backer Program dashboard showing five KPI cards for backers, claim entries, claimed, not claimed and customers without a claim document, plus tables of customers per campaign and claim status by campaign.">
+  <figcaption><b>Figure 1.</b> The app inside the admin. Tabs are <b>Dashboard</b>, <b>Discount Rules</b>, <b>Import Backer</b> and <b>Redirect</b>, with the store domain on the right. The dashboard reports <b>Loaded ✓</b> when the customer mirror answered.</figcaption>
+</figure>
+
+<table>
+  <thead><tr><th>Tab</th><th>What it is for</th><th>Writes anything?</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard</td><td>Backer counts, campaign breakdown, claim status per campaign, recent backers; the Refresh data button.</td><td>Only through Refresh data, which rebuilds the customer mirror</td></tr>
+    <tr><td>Discount Rules</td><td>The bundle and Black Friday pricing document, in a form editor or as raw JSON.</td><td>Yes: shop metafield <code>bundle.rules</code></td></tr>
+    <tr><td>Import Backer</td><td>Upload a Kickstarter or BackerKit CSV to create customers and merge campaign claims.</td><td>Yes: customer claims, tags, claim ledger</td></tr>
+    <tr><td>Redirect</td><td>Storefront URL redirects for renamed or retired product handles.</td><td>Yes: Shopify URL redirects</td></tr>
+  </tbody>
+</table>
+
+<figure>
+  <img src="images/a2-app-tabs.jpg" alt="Close-up of the Backer Program tab row with four numbered markers: 1 Dashboard, 2 Discount Rules, 3 Import Backer, 4 Redirect.">
+  <figcaption><b>Figure 2.</b> The tab row, close up. <b>1</b> Dashboard for counts and claims, <b>2</b> Discount Rules for bundle pricing, <b>3</b> Import Backer for CSV uploads, <b>4</b> Redirect for old product links. The tab you are on is the one in the grey pill.</figcaption>
+</figure>
+
+<h3>Redirects</h3>
+
+<p>Renaming a product or retiring a handle leaves the old URL dead unless a redirect covers it. The Redirect tab is the list of those rules, and it is the first place to look when someone reports a 404 on a link from an old campaign.</p>
+
+<figure>
+  <img src="images/sbp-redirects.jpg" alt="Redirects tab of the Backer Program app: an add-redirect form with source and target path fields, and a table of existing redirects mapping old product handles such as copy-of-ms-daymaker-tee-test-pg to current handles.">
+  <figcaption><b>Figure 3.</b> Redirects. The form adds one rule at a time; the table search filters by source path and reported 100 redirects on the page with more available. Most rows exist because colourways were split into separate products, which changes the handle.</figcaption>
+</figure>
+
+<h2 id="b1">B1 · Backer management and the dashboard</h2>
+
+<p>The dashboard reads from a Redis mirror of the customer table, not from Shopify directly. That is why it loads in seconds: a full customer scan on every page load was the old failure, and the mirror replaced it.</p>
+
+<p>Measured on 25 November 2026, the dashboard reported <b>2,385 backers</b> (customers with a claim), <b>2,508 claim entries</b> across four campaigns, <b>2,303 claimed</b>, <b>205 awaiting claim</b>, and <b>14,336 customers scanned with no claim document</b>. Per campaign: <code>gale_vs_jacket</code> 1,329 claimed; <code>regenerative_tee</code> 603 claimed; <code>merino_shirt</code> 572 backers split 370 claimed, 194 unclaimed and 8 checkout ready; <code>gale_v2</code> 4 backers, 1 claimed and 3 unclaimed.</p>
+
+<h3>What each card means</h3>
+
+<table>
+  <thead><tr><th>Card</th><th>What it counts</th><th>What to do with it</th></tr></thead>
+  <tbody>
+    <tr><td>Backers</td><td>Customers holding at least one claim entry, in any state.</td><td>The size of the program. It only falls when a claim is deleted.</td></tr>
+    <tr><td>Claim entries</td><td>Claims across all campaigns, so one customer with two campaigns counts twice.</td><td>Compare it with Backers to see how many people hold more than one campaign.</td></tr>
+    <tr><td>Claimed</td><td>Rewards paid for and fulfilled.</td><td>The finished work. If this stalls for a day, check the orders-paid webhook.</td></tr>
+    <tr><td>Not claimed</td><td>Backers who have not started, including abandoned checkouts.</td><td>The follow-up list. Any number that grows for a week is a communication problem, not a code problem.</td></tr>
+    <tr><td>No claim doc</td><td>Customers scanned who hold no claim at all.</td><td>Normal and large: these are ordinary shoppers, not backers.</td></tr>
+  </tbody>
+</table>
+
+<h3>The daily five minutes</h3>
+
+<ol class="steps">
+  <li>Open the dashboard and confirm it says <b>Loaded ✓</b>. Without that, the numbers below are stale or missing.</li>
+  <li>Compare <b>Not claimed</b> with yesterday. A jump means new claims arrived, or a payment failed for several people at once.</li>
+  <li>Look at Claim status by campaign. Any row with a <b>Checkout Ready</b> count that has not moved in a day is a stuck checkout: those people were sent to pay and did not.</li>
+  <li>Check <b>Black Friday import volume</b> if a campaign is live: the mirror is the thing that gets busy.</li>
+</ol>
+
+<div class="callout">
+  <h4>Reading "not in rules"</h4>
+  <p>The Customers per campaign table labels a campaign "not in rules" when no pricing group in the current Discount Rules document names it. That is normal for closed campaigns: the claims stay, the pricing group was removed. It is only a problem when an <em>active</em> campaign shows it, because then the campaign's products have no bundle pricing.</p>
+</div>
+
+<h3>Refresh data</h3>
+<p>Use <b>Refresh data</b> when a customer created in the last few minutes does not appear, or after a bulk import. It rebuilds the mirror from Shopify and is safe to run at any time. The scheduled rebuild runs daily at 05:23 UTC; webhooks keep the mirror current in between, with propagation measured at about three seconds.</p>
+
+<h3>Where a backer's data lives</h3>
+<p>Per customer, the campaign claim is one entry in the <code>kickstarter.claims</code> customer metafield, keyed by campaign. It carries the pledge amount, quantity, gift products, free-shipping flag, note and status. The campaign configuration it refers to is the <code>kickstarter.campaign_rules</code> shop metafield. A backer's claim is therefore never a row in a database you can lose: it is a metafield, versioned by Shopify, and it survives an app redeploy.</p>
+
+<h2 id="b2">B2 · Campaign setup</h2>
+
+<p>A campaign exists in two places, and both are needed. The claim entries on customers are created by the import. The campaign configuration in <code>kickstarter.campaign_rules</code> defines titles, rewards, add-ons and the reward-id mapping that the import validates against.</p>
+
+<ol class="steps">
+  <li>Decide the campaign key. It is the identifier on every claim and on every pricing group, and renaming it later orphans both. Lowercase, underscores, as in <code>merino_shirt</code>.</li>
+  <li>Write the campaign rules document: title, reward list, add-ons, and the mapping from Kickstarter reward ids to store products.</li>
+  <li>Write it to the <code>kickstarter.campaign_rules</code> shop metafield. The app's campaign-rules endpoint is the supported route; the importer's own metafield helper is deprecated and kept only for legacy consumers.</li>
+  <li>Import the backer report (B3 below) with the dry run first.</li>
+  <li>Add the campaign to the pricing document in Discount Rules if its products need bundle pricing, using the same campaign key.</li>
+  <li>Check the dashboard: the campaign should appear with a backer count and a claim status breakdown.</li>
+</ol>
+
+<p>The Import Backer page reported <b>9 campaigns available</b> on 25 November 2026, which is the count in the campaign rules document, not the four campaigns currently holding claims. The gap is expected: older campaigns keep their configuration long after their claims are closed.</p>
+
+<div class="callout warn">
+  <h4>The campaign rules editor admits one email address</h4>
+  <p>The storefront page that edits campaign rules is gated to <code>customer.email == logan@seadon.co</code> plus design mode. It saves to the app, while the portal and the claim page read a GitHub raw URL pinned to a specific commit. After handover nobody else can open the editor, and a save does not change what the pages load. Change both before 16 December: the email constant in <code>sections/main-campaign-rules-editor.liquid</code>, and the pinned URL in that section and in <code>sections/main-backer-portal.liquid</code>.</p>
+</div>
+
+<h2 id="b3">B3 · Reward claims, state by state</h2>
+
+<p>A claim moves through four states, and the app owns the transitions. The dashboard's Claim status table shows the same four columns, so an operator can read state directly off the screen.</p>
+
+<table>
+  <thead><tr><th>State</th><th>Means</th><th>Who moves it</th></tr></thead>
+  <tbody>
+    <tr><td>unclaimed</td><td>The backer has a claim entry and has not started. An expired reservation returns here so the backer can retry.</td><td>Import, or reservation expiry</td></tr>
+    <tr><td>reserved</td><td>The backer began the claim and holds the reward, but no draft order exists yet.</td><td>Claim route on reserve</td></tr>
+    <tr><td>checkout_ready</td><td>A draft order was created and the backer was sent to checkout. Holds a reservation id and an expiry.</td><td>Claim route after draft creation</td></tr>
+    <tr><td>claimed</td><td>Paid. The order id, status URL and finalisation time are recorded. Immutable from here: a replay reports "already finalized" rather than rewriting.</td><td><code>orders/paid</code> webhook</td></tr>
+  </tbody>
+</table>
+
+<h3>What to do in each state</h3>
+
+<ul>
+  <li><strong>unclaimed.</strong> Nothing, unless the backer asks. Confirm the claim exists and the customer carries the <code>backer-&lt;campaign&gt;</code> tag. Never edit the claim to push someone forward: the portal does that.</li>
+  <li><strong>reserved.</strong> The backer started and stopped before the draft order existed. It clears itself after 30 minutes when they retry. There is nothing to click.</li>
+  <li><strong>checkout_ready.</strong> An invoice exists and is waiting to be paid. If it sits for a day, ask the backer to reopen the portal. A new reservation deletes the previous unpaid draft, so old invoice links stop working.</li>
+  <li><strong>claimed.</strong> Finished. Do not edit the claim. A correction is a refund or a new order, recorded against the order, not the claim.</li>
+</ul>
+
+<p>A reservation lasts 30 minutes by default (<code>CLAIM_RESERVATION_MINUTES</code>), and the expiry is stamped on the claim. The draft order's inventory hold uses the same value. Expiry is computed when a claim is read, not enforced by a job: no scheduled task rewrites an expired claim, and the claim handler does not call the expiry check before overwriting one. A claim abandoned at checkout stays at <code>reserved</code> or <code>checkout_ready</code> in the dashboard until the backer tries again, which matters when you count outstanding backers.</p>
+
+<p>State writes sit behind a kill switch, <code>CLAIM_STATUS_WRITES_ENABLED</code>. With it set to <code>false</code>, reserve and finalise writes are skipped while draft orders are still created, so a shopper can reach a payable invoice whose claim never moves. Treat it as a stop for state churn during an incident, not as a general brake.</p>
+
+<div class="callout warn">
+  <h4>Paying an invoice whose claim is stale</h4>
+  <p>The <code>checkout_ready</code> write is best effort: it is wrapped so a metafield failure cannot block the invoice. If that write was lost, the order arrives with a reservation id the claim no longer holds, and the <code>orders/paid</code> handler refuses it with "Order reservation does not match claim". The backer has paid and the claim stays unclaimed. Check the claim's reservation id against the order's line-item attributes before refunding anything.</p>
+</div>
+
+<figure>
+  <img src="images/sbp-import.jpg" alt="Import Backer page with a campaign dropdown showing merino_shirt and 10 rewards, a Backers CSV file input, an Import button, three option checkboxes with dry run ticked, and a gift handles field.">
+  <figcaption><b>Figure 4.</b> Import Backer. The dry run is on by default in this session, which is the correct default: it validates the file and reports what it would write. The gift handles field applies to every reward row, and the per-row Gift Handles column in the CSV wins when both exist.</figcaption>
+</figure>
+
+<ol class="steps">
+  <li>Choose the campaign. Confirm the reward count in the dropdown matches the campaign you mean.</li>
+  <li>Export the backer report from Kickstarter or BackerKit and attach it as the Backers CSV.</li>
+  <li>Leave <b>Dry run</b> checked and press <b>Import</b>. Read the result panel: it reports per-row actions and totals, and it refuses the whole file if any Reward ID is missing from the campaign rules.</li>
+  <li>Uncheck Dry run and import for real. Existing claimed rewards are never downgraded, so re-importing a file is safe.</li>
+  <li>Tick <b>Mark imported rows as claimed</b> only when the rewards were already fulfilled outside the store. This skips the claim flow for those rows on purpose.</li>
+  <li>Tick <b>Include unpaid backers</b> only for pledge-over-time backers whose status is not collected. Their rows import as claims that cannot be priced until payment.</li>
+</ol>
+
+<h3>Every field on the import page</h3>
+
+<table>
+  <thead><tr><th>Field</th><th>What it does</th><th>What to choose</th></tr></thead>
+  <tbody>
+    <tr><td>Campaign</td><td>Which campaign every row belongs to. The reward count in brackets comes from the campaign rules file.</td><td>The exact campaign. A wrong choice writes claims under the wrong key, and undoing that means editing customers one by one.</td></tr>
+    <tr><td>Backers CSV</td><td>The Kickstarter or BackerKit export.</td><td>The original export, unedited. Edit it in a spreadsheet only if you save it back as plain CSV.</td></tr>
+    <tr><td>Dry run</td><td>Validates and reports without writing.</td><td>On, for the first pass of every file. Leave it on until the report matches what you expect.</td></tr>
+    <tr><td>Mark imported rows as claimed</td><td>Writes the claim as already fulfilled.</td><td>Off, unless the rewards were sent outside the store. Claimed rows skip the portal entirely.</td></tr>
+    <tr><td>Include unpaid backers</td><td>Keeps rows whose pledged status is not collected.</td><td>On only for pledge-over-time campaigns; those claims cannot be priced until payment lands.</td></tr>
+    <tr><td>Gift handles</td><td>A list of gift product handles applied to every reward row in this upload.</td><td>Blank when the CSV has its own Gift Handles column, which wins for those rows.</td></tr>
+    <tr><td>Import</td><td>Runs the upload.</td><td>Press once. Re-pressing the same file is safe: claimed claims are never downgraded.</td></tr>
+    <tr><td>Result panel</td><td>Per-row actions and totals.</td><td>Read the first twenty lines. A refused file names the unknown reward ids and writes nothing.</td></tr>
+  </tbody>
+</table>
+
+<div class="callout warn">
+  <h4>What the import writes, and what it costs</h4>
+  <p>Every reward backer gets the tag <code>backer-&lt;campaign-key&gt;</code> on the customer record. Rows with no reward get <code>backed-with-no-reward</code>. The claim entry is merged, not replaced, and the write carries an optimistic concurrency digest so two imports cannot silently overwrite each other. A second run on the same file is a no-op for rows already present.</p>
+  <p>Three limits are worth knowing before the first real file. The request body is capped at about 3.5 MB, so a larger export has to be split; the handler rejects oversized bodies rather than chunking them. Rows run through two workers, clamped to four, with up to eight attempts when Shopify throttles. And the campaign list in the dropdown comes from the campaign rules JSON on GitHub, not from Shopify, so a campaign missing from that file cannot be chosen here.</p>
+</div>
+
+<h2 id="b4">B4 · Pricing configuration</h2>
+
+<p>One document holds every bundle and Black Friday price: the <code>bundle.rules</code> shop metafield. The Discount Rules tab is an editor over it, with a raw JSON view for the cases the form does not cover. The theme never computes a bundle price itself; it asks the app for a quote, and the app prices from this document.</p>
+
+<p>Structure, as the form exposes it: groups, each with an identifier, a label, a mixable flag, tiers, optional Black Friday single prices, and a family selector that maps products the assignment map has not seen. A tier is a quantity threshold plus a price rule: percent off each unit, a fixed price, or buy N get X free.</p>
+
+<ol class="steps">
+  <li>Open Discount Rules and check the status line: it reports loaded groups and assignments, for example <b>15 groups · 268 assignments</b>.</li>
+  <li>Edit in <b>Editor</b>. Saves are validated server-side, so a malformed document is rejected rather than reaching the pricing engine.</li>
+  <li>Use <b>Raw JSON</b> only for structural changes the form cannot express, and diff your edit against the loaded document before saving.</li>
+  <li>Verify with a cart quote: add a qualifying set and read the line prices on the storefront.</li>
+  <li>Record what changed and why. The pricing document is the one place where a typo costs money on every order.</li>
+</ol>
+
+<h2 id="b5">B5 · Ongoing maintenance</h2>
+
+<table>
+  <thead><tr><th>Job</th><th>When</th><th>How to run it by hand</th></tr></thead>
+  <tbody>
+    <tr><td>Customer mirror rebuild</td><td>Daily 05:23 UTC</td><td><code>POST /api/customers-sync</code> with cron auth, or <b>Refresh data</b> on the dashboard</td></tr>
+    <tr><td>Inventory full rebuild</td><td>Daily 04:17 UTC</td><td><code>/api/inventory-sync</code></td></tr>
+    <tr><td>Webhook re-registration</td><td>After a webhook outage</td><td><code>/api/shopify-proxy/register-inventory</code>, <code>register-orders-paid</code>, <code>register-orders-routing</code>, <code>register-customers</code>; signed app-proxy calls</td></tr>
+    <tr><td>Health check</td><td>Anytime</td><td><code>/api/health</code> (no auth, counts only)</td></tr>
+    <tr><td>Egress probe</td><td>When filling Shopify's IP allowlist</td><td><code>/api/egress-probe</code></td></tr>
+  </tbody>
+</table>
+
+<h3>The maintenance calendar</h3>
+
+<p>Four rhythms cover everything that decays on its own. If nothing else is done, do the daily line and the campaign-close line: those two prevent almost every incident this app has had.</p>
+
+<table>
+  <thead><tr><th>Rhythm</th><th>What to check</th><th>What good looks like</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Daily</td>
+      <td>Dashboard says Loaded; the Not claimed count; Checkout Ready rows that did not move; <code>/api/health</code> counts</td>
+      <td>Numbers move in the direction the calendar explains, and no row is frozen.</td>
+    </tr>
+    <tr>
+      <td>Weekly</td>
+      <td>Discount Rules still contains the offer you intend; expired codes; renames that need a redirect; imports still pending</td>
+      <td>The pricing document matches the live marketing, and every old product link resolves.</td>
+    </tr>
+    <tr>
+      <td>Monthly</td>
+      <td>Token age, webhook registration, the app test suite, draft theme count</td>
+      <td>Tests pass, a re-registered webhook delivers, and drafts from finished work are deleted.</td>
+    </tr>
+    <tr>
+      <td>At campaign close</td>
+      <td>Black Friday single prices, announcement bar, campaign rules file</td>
+      <td>Sale prices deleted rather than dormant, and the rules file keeps the campaign for history.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Two platform limits shape this list. Vercel's Hobby plan allows one cron invocation per day, so the two schedules above are the whole budget and auto-deploys from git are deliberately off. Shopify blocked bulk operations from ASN 12322 after flagging unusual activity (ticket <code>a Shopify support ticket</code>); ordinary API calls are unaffected until enforcement is switched on.</p>
+
+<h3>Token rotation</h3>
+<p>The dashboard mints the permanent token by itself. Every dashboard load fires a silent request to <code>/api/access-token</code>, which exchanges the admin session for a non-expiring offline token and keeps it in Redis. The <b>Get migration token</b> button named in the original plan does the same thing by another route, so the app may already hold a permanent token by the time you read this. Check the stored value and Vercel's <code>SHOPIFY_ADMIN_API_TOKEN</code> before assuming the short-lived token is still in force.</p>
+
+<p>Rotate once during handover anyway, so the successor holds a credential that was never shared in transit. Treat the rotation as mandatory if the old token ever appeared in a screenshot, a document or a chat message.</p>
+
+<div class="callout warn">
+  <h4>Admin access is API access</h4>
+  <p>The app's credential endpoint returns a durable token to a live admin session, and its optional shared secret is not currently enforced. That is why the staff account transfer on page 3 is a security event, not an administrative one. The technical mechanism is in the internal edition only, because publishing it would identify a live attack surface.</p>
+</div>
+
+<h2 id="b6">B6 · Troubleshooting</h2>
+
+<table>
+  <thead><tr><th>Symptom</th><th>Check</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Dashboard slow or timing out</td>
+      <td><code>/api/health</code> shows the mirror source; the page should read "Loaded"</td>
+      <td>The mirror is empty or Redis is unreachable, so the app is scanning Shopify. Run Refresh data; check the Upstash connection strings in Vercel.</td>
+    </tr>
+    <tr>
+      <td>Claim stuck at checkout_ready</td>
+      <td>Order exists? Was <code>orders/paid</code> delivered?</td>
+      <td>The finalise step is webhook driven. Re-register the orders-paid webhook; the claim finalises on the next delivery, and a replay is idempotent.</td>
+    </tr>
+    <tr>
+      <td>"Order reservation does not match claim" in the logs</td>
+      <td>The order's line-item reservation id against the claim's <code>reservation_id</code></td>
+      <td>The <code>checkout_ready</code> write was lost after the invoice was created, so the backer paid an invoice the claim no longer recognises. Reconcile by hand: order paid, claim still unclaimed.</td>
+    </tr>
+    <tr>
+      <td>Campaign names blank or marked "orphan" on the dashboard</td>
+      <td>Whether the campaign exists in the rules JSON and in <code>kickstarter.campaign_rules</code></td>
+      <td>The dashboard still reads titles from the deprecated shop metafield. A campaign imported from the GitHub rules only shows counts, not its title.</td>
+    </tr>
+    <tr>
+      <td>Claim refused as not payable</td>
+      <td>Claim amount versus pledge; free-shipping flag</td>
+      <td>Reward budget is capped at the pledge, so an add-on set priced above the pledge is rejected rather than discounted to zero.</td>
+    </tr>
+    <tr>
+      <td>Import refuses the file</td>
+      <td>The pivot check output: unknown reward ids</td>
+      <td>A Reward ID in the CSV is not in the campaign rules. Fix the rules or the file; the importer deliberately imports nothing rather than half a file.</td>
+    </tr>
+    <tr>
+      <td>Bundle prices missing for every product</td>
+      <td>Discount Rules status line: does it fail to load?</td>
+      <td>Malformed <code>bundle.rules</code>. The editor and the quote both need a valid document; restore the last good JSON.</td>
+    </tr>
+    <tr>
+      <td>Inventory counts drift from Shopify</td>
+      <td>Last inventory sync time in <code>/api/health</code></td>
+      <td>Inventory updates arrive by webhook with a nightly rebuild. A missed webhook leaves one variant stale until the rebuild; run <code>/api/inventory-sync</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+</main>
+
+<footer>
+  <div>
+    <p>Page 2 of 5 · compiled 25 November 2026 · dashboard figures and UI labels captured the same day.</p>
+    <p>Next: <a href="03-access-and-code.html">Access, source code and deployment</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
